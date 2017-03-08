@@ -1,4 +1,4 @@
-const { database:config } = require('../../config.json')
+const { database: config } = require('../../config.json')
 const pg = require('pg')
 const pool = new pg.Pool(config)
 const query = require('../../src/persistence/query')(pool)
@@ -18,7 +18,7 @@ query(`
   ALTER TABLE public.users
     OWNER TO dev;
 `)
-.then(function(x) {
+.then(function (x) {
   console.log('Created users table')
   process.exit()
 })
