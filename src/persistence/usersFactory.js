@@ -31,8 +31,20 @@ module.exports = function (pool) {
     })
   }
 
+  function deleteUser (name) {
+    return new Promise(function (resolve, reject) {
+      return query(`
+          DELETE FROM ${USERTABLE}
+          WHERE "name" = $1
+        `, [name])
+        .then(() => resolve(true))
+        .catch(err => reject(err))
+    })
+  }
+
   return {
     isUser,
-    createUser
+    createUser,
+    deleteUser
   }
 }
