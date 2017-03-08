@@ -1,19 +1,13 @@
 const router = require('express').Router()
+const endpointAction = require('./endpointAction')
 
 module.exports = function routes () {
   router.get('/', function (req, res) {
-    res.json({
-      success: true,
-      msg: 'The api is up and running'
-    })
+    res.json(endpointAction.testEndpoint())
   })
 
-  router.post('/authenticate', function (req, res) {
-    res.json({
-      success: true,
-      msg: 'it worked'
-    })
+  router.get('/authenticate', function (req, res) {
+    res.json(endpointAction.createJWT())
   })
 
   return router
-}
