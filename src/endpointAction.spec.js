@@ -9,44 +9,32 @@ describe('Should be able to control user opperations', function () {
       expect(createUserInject).to.be.a('function')
     })
 
-    it('calls isUser', function (done) {
-      const isUser = function () {
-        done()
-        return Promise.resolve(true)
-      }
-
-      const createUser = () => Promise.resolve('none')
-
-      createUserInject(TESTUSER, TESTPASS, {isUser, createUser})
-    })
-
-    it('should not create a user if it already exists', function (done) {
-      const isUser = () => Promise.resolve(true)
-      const createUser = () => {
-        done('created a user when it wasn\'t suposed to')
-        return Promise.resolve(false)
-      }
-      createUserInject(TESTUSER, TESTPASS, {isUser, createUser})
-      .then((x) => done())
-      .catch(err => console.log(err))
-    })
-
-    it('should create a user if they don\'t already exist', function (done) {
-      let makeUserWasCalled = false
-      const isUser = () => Promise.resolve(false)
-      const makeUser = () => {
-        makeUserWasCalled = true
-        return Promise.resolve(true)
-      }
-      createUserInject(TESTUSER, TESTPASS, {isUser, makeUser})
-      .then((createdUser) => {
-        if (createdUser && makeUserWasCalled) {
+    it('should retern success if makeUser is successful', function (done) {
+      const makeUser = () => Promise.resolve(true)
+      createUserInject(TESTUSER, TESTPASS, { makeUser })
+      .then(result => {
+        if (result.success) {
           done()
         } else {
-          done('did not create the user as expected')
+          done('should have been a success')
         }
       })
-      .catch(err => done(err))
+    })
+
+    it('should return err if makeUser errors', function (done) {
+      const makeUser = () => {
+        return Promise.reject(new Error('Was not able to create user'))
+      }
+
+      createUserInject(TESTUSER, TESTPASS, { makeUser })
+      .then(function (result) {
+        if (typeof result.success !== 'undefined' && !result.success) {
+          done()
+        } else {
+          done('could not find {success: false}')
+        }
+      })
+      .catch(() => done('Should not have throwen an error'))
     })
   })
 })

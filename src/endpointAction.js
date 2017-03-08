@@ -22,18 +22,20 @@ function createUser (name, password) {
     name,
     password,
     {
-      isUser: users.isUser,
       makeUser: users.createUser
     }
   )
 }
 
-function createUserInject (name, password, {isUser, makeUser}) {
-  return isUser(name)
-    .then(foundUser => {
-      if (!foundUser) return makeUser(name, password)
-      return Promise.resolve(false)
-    })
+function createUserInject (name, password, { makeUser }) {
+  return new Promise(function (resolve, reject) {
+    makeUser(name, password)
+    .then(() => resolve({success: true}))
+    .catch(err => resolve({
+      success: false,
+      error: err
+    }))
+  })
 }
 
 module.exports = {
