@@ -3,6 +3,19 @@ const USERTABLE = 'users'
 module.exports = function (pool) {
   const query = require('./query')(pool)
 
+  function createUser (name, password) {
+    return new Promise(function (resolve, reject) {
+      return query(`
+          INSERT INTO ${USERTABLE}
+          (name, password)
+          VALUES
+          ($1, $2)
+        `, [name, password])
+        .then(() => resolve(true))
+        .catch(err => reject(err))
+    })
+  }
+
   function isUser (name) {
     return new Promise(function (resolve, reject) {
       return query(`
@@ -14,13 +27,12 @@ module.exports = function (pool) {
           if (data.length) return resolve(true)
           resolve(false)
         })
-        .catch(function (err) {
-          reject(err)
-        })
+        .catch(err => reject(err))
     })
   }
 
   return {
-    isUser
+    isUser,
+    createUser
   }
 }
