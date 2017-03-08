@@ -1,6 +1,6 @@
-const R = require('ramda');
+const _ = require('lodash')
 
-module.exports = R.curry( function(pool, queryString){
+module.exports = _.curry( function(pool, queryString){
   const params = arguments[2] || [];
   return new Promise(function(resolve, reject){
 
