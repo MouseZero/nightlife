@@ -29,8 +29,11 @@ function createUser (name, password) {
 }
 
 function createUserInject (name, password, {isUser, makeUser}) {
-  isUser()
-  return false
+  return isUser(name)
+    .then(foundUser => {
+      if (!foundUser) return makeUser(name, password)
+      return Promise.resolve(false)
+    })
 }
 
 module.exports = {
