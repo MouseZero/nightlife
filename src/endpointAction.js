@@ -1,11 +1,11 @@
-function createJWT(name, password){
+function createJWT (name, password) {
   return {
     success: true,
     msg: 'test'
   }
 }
 
-function testEndpoint(){
+function testEndpoint () {
   return {
     success: true,
     msg: 'The api is up and running'

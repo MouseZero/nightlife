@@ -1,13 +1,14 @@
 const router = require('express').Router()
-const endpointAction = require('./endpointAction')
+const endPointAction = require('./endPointAction')
 
 module.exports = function routes () {
   router.get('/', function (req, res) {
-    res.json(endpointAction.testEndpoint())
+    res.json(endPointAction.testEndPoint())
   })
 
   router.get('/authenticate', function (req, res) {
-    res.json(endpointAction.createJWT())
+    res.json(endPointAction.createJWT())
   })
 
   return router
+}
