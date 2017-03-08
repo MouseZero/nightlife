@@ -4,7 +4,7 @@ module.exports = function routes () {
   router.get('/', function (req, res) {
     res.json({
       success: true,
-      msg: 'it worked'
+      msg: 'The api is up and running'
     })
   })
 
