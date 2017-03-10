@@ -38,10 +38,31 @@ function createUserInject (name, password, { makeUser }) {
   })
 }
 
+function deleteUserInterface (name) {
+  const { deleteUser } = users
+  return deleteUserInject(
+    name,
+    { deleteUser }
+  )
+}
+
+function deleteUserInject (name, { deleteUser }) {
+  return new Promise(function (resolve, reject) {
+    deleteUser(name)
+    .then(() => resolve({ success: true }))
+    .catch(err => resolve({
+      success: false,
+      error: err
+    }))
+  })
+}
+
 module.exports = {
   createJWT,
   testEndpoint,
   createUser,
+  deleteUserInterface,
   // Functions For Testing
-  createUserInject
+  createUserInject,
+  deleteUserInject
 }
