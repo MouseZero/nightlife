@@ -44,7 +44,7 @@ describe('Should be able to control user opperations', function () {
         deleteUser.called = true
         return Promise.resolve()
       }
-      const result = await deleteUserInject(TESTUSER, { deleteUser })
+      await deleteUserInject(TESTUSER, { deleteUser })
       expect(deleteUser.called).to.equal(true)
     })
 
@@ -54,14 +54,10 @@ describe('Should be able to control user opperations', function () {
       expect(result.success).to.equal(true)
     })
 
-    it('should git a false success for failed delete', function (done) {
+    it('should git a false success for failed delete', async function () {
       const deleteUser = () => Promise.reject(new Error('some error'))
-      deleteUserInject(TESTUSER, { deleteUser })
-      .then((x) => {
-        if (isNotSuccess(x)) return done()
-        done('Should have returned with "success": false')
-      })
-      .catch(x => done('should not have throwen an error'))
+      const result = await deleteUserInject(TESTUSER, { deleteUser })
+      expect(isNotSuccess(result)).to.equal(true)
     })
   })
 })
