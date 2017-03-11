@@ -39,21 +39,21 @@ async function deleteUserInject (name, deleteUser) {
   return await actionInject([name], deleteUser)
 }
 
-async function authenticateInject (argArray, getUser) {
+async function authenticateInject ([name, password], getUser) {
   try {
-    const user = await getUser(...argArray)
-    if (user) {
+    const user = await getUser(name, password)
+    if (user.password === password) {
       return Promise.resolve({
         success: true,
-        user: user
+        user
       })
     }
     return Promise.resolve({
       success: false,
-      msg: 'Sorry no user'
+      msg: 'Wrong user name or password'
     })
   } catch (err) {
-    return Promise.resove({
+    return Promise.resolve({
       success: false,
       msg: err
     })

@@ -38,9 +38,9 @@ describe('Should be able to control user opperations', function () {
   })
 
   describe('authenticateInject', function () {
-    it('should return success if callback returns object', async function () {
-      const getUser = () => Promise.resolve({name: TESTUSER})
-      const result = await authenticateInject(['', ''], getUser)
+    it('should return success if callback returns same password', async function () {
+      const getUser = () => Promise.resolve({password: TESTPASS})
+      const result = await authenticateInject(['', TESTPASS], getUser)
       expect(result.success).to.be.equal(true)
     })
 
