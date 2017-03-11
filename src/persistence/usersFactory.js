@@ -37,9 +37,9 @@ module.exports = function (pool) {
         select * from users
         where name = $1
         `, [ name ])
-      Promise.resolve(user)
+      return Promise.resolve(user[0])
     } catch (err) {
-      Promise.reject(new Error(err))
+      return Promise.reject(new Error(err))
     }
   }
 

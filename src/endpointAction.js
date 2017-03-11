@@ -23,8 +23,8 @@ function deleteUserInterface (name) {
   return deleteUserInject(name, deleteUser)
 }
 
-function authenticate (name, password) {
-  return authenticateInject([name, password], users.getUser)
+async function authenticate (name, password) {
+  return await authenticateInject([name, password], users.getUser)
 }
 
 function createUser (name, password) {
@@ -43,20 +43,20 @@ async function authenticateInject (argArray, getUser) {
   try {
     const user = await getUser(...argArray)
     if (user) {
-      return {
+      return Promise.resolve({
         success: true,
         user: user
-      }
+      })
     }
-    return {
+    return Promise.resolve({
       success: false,
       msg: 'Sorry no user'
-    }
+    })
   } catch (err) {
-    return {
+    return Promise.resove({
       success: false,
       msg: err
-    }
+    })
   }
 }
 
