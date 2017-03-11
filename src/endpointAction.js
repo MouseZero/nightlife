@@ -1,8 +1,8 @@
 const pg = require('pg')
-const { database: config } = require('../config.json')
+const { database: config, secret } = require('../config.json')
 const pool = new pg.Pool(config)
 const users = require('./persistence/usersFactory')(pool)
-// const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken')
 
 function createJWT (name, password) {
   return {
@@ -42,15 +42,18 @@ async function deleteUserInject (name, deleteUser) {
 async function authenticateInject ([name, password], getUser) {
   try {
     const user = await getUser(name, password)
-    if (user.password === password) {
+    if (user.password.trim() === password) {
+      const token = jwt.sign({id: user.id}, secret, {
+        expiresIn: 86400
+      })
       return Promise.resolve({
         success: true,
-        user
+        token
       })
     }
     return Promise.resolve({
       success: false,
-      msg: 'Wrong user name or password'
+      msg: 'Password does not match'
     })
   } catch (err) {
     return Promise.resolve({

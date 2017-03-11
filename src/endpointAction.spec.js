@@ -38,10 +38,16 @@ describe('Should be able to control user opperations', function () {
   })
 
   describe('authenticateInject', function () {
-    it('should return success if callback returns same password', async function () {
+    it('should return success if correct password', async function () {
       const getUser = () => Promise.resolve({password: TESTPASS})
       const result = await authenticateInject(['', TESTPASS], getUser)
       expect(result.success).to.be.equal(true)
+    })
+
+    it('should return "success false" if wrong password', async function () {
+      const getUser = () => Promise.resove({password: TESTPASS})
+      const result = await authenticateInject(['', 'wrongPass'], getUser)
+      expect(result.success).to.equal(false)
     })
 
     it('should return "success: false" if callback Errors', async function () {
