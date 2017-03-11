@@ -17,6 +17,14 @@ function testEndpoint () {
   }
 }
 
+function deleteUserInterface (name) {
+  const { deleteUser } = users
+  return deleteUserInject(
+    name,
+    { deleteUser }
+  )
+}
+
 function createUser (name, password) {
   return createUser(
     name,
@@ -27,34 +35,24 @@ function createUser (name, password) {
   )
 }
 
-function createUserInject (name, password, { makeUser }) {
-  return new Promise(function (resolve, reject) {
-    makeUser(name, password)
-    .then(() => resolve({success: true}))
-    .catch(err => resolve({
-      success: false,
-      error: err
-    }))
-  })
+async function createUserInject (name, password, { makeUser }) {
+  return await actionInject([name, password], makeUser)
 }
 
-function deleteUserInterface (name) {
-  const { deleteUser } = users
-  return deleteUserInject(
-    name,
-    { deleteUser }
-  )
+async function deleteUserInject (name, { deleteUser }) {
+  return await actionInject([name], deleteUser)
 }
 
-function deleteUserInject (name, { deleteUser }) {
-  return new Promise(function (resolve, reject) {
-    deleteUser(name)
-    .then(() => resolve({ success: true }))
-    .catch(err => resolve({
+async function actionInject (argArray, fn) {
+  try {
+    await fn(...argArray)
+    return Promise.resolve({success: true})
+  } catch (err) {
+    return Promise.resolve({
       success: false,
-      error: err
-    }))
-  })
+      msg: err
+    })
+  }
 }
 
 module.exports = {
