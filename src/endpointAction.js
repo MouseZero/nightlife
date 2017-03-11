@@ -19,27 +19,18 @@ function testEndpoint () {
 
 function deleteUserInterface (name) {
   const { deleteUser } = users
-  return deleteUserInject(
-    name,
-    { deleteUser }
-  )
+  return deleteUserInject(name, deleteUser)
 }
 
 function createUser (name, password) {
-  return createUser(
-    name,
-    password,
-    {
-      makeUser: users.createUser
-    }
-  )
+  return createUser(name, password, users.createUser)
 }
 
-async function createUserInject (name, password, { makeUser }) {
+async function createUserInject (name, password, makeUser) {
   return await actionInject([name, password], makeUser)
 }
 
-async function deleteUserInject (name, { deleteUser }) {
+async function deleteUserInject (name, deleteUser) {
   return await actionInject([name], deleteUser)
 }
 
