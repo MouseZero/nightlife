@@ -23,23 +23,11 @@ function deleteUserInterface (name) {
   return deleteUserInject(name, deleteUser)
 }
 
-async function authenticate (name, password) {
-  return await authenticateInject([name, password], users.getUser)
-}
-
 function createUser (name, password) {
   return createUser(name, password, users.createUser)
 }
 
-async function createUserInject (name, password, makeUser) {
-  return await actionInject([name, password], makeUser)
-}
-
-async function deleteUserInject (name, deleteUser) {
-  return await actionInject([name], deleteUser)
-}
-
-async function authenticateInject ([name, password], getUser) {
+async function authenticate ([name, password], { getUser }) {
   try {
     const user = await getUser(name, password)
     if (user.password.trim() === password) {
@@ -63,7 +51,15 @@ async function authenticateInject ([name, password], getUser) {
   }
 }
 
-async function actionInject (argArray, fn) {
+async function createUserInject (name, password, makeUser) {
+  return await actionConfirm([name, password], makeUser)
+}
+
+async function deleteUserInject (name, deleteUser) {
+  return await actionConfirm([name], deleteUser)
+}
+
+async function actionConfirm (argArray, fn) {
   try {
     await fn(...argArray)
     return Promise.resolve({success: true})
@@ -83,6 +79,5 @@ module.exports = {
   authenticate,
   // Functions For Testing
   createUserInject,
-  deleteUserInject,
-  authenticateInject
+  deleteUserInject
 }
