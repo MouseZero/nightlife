@@ -31,6 +31,18 @@ module.exports = function (pool) {
     })
   }
 
+  async function getUser (name) {
+    try {
+      const user = await query(`
+        select * from users
+        where name = $1
+        `, [ name ])
+      Promise.resolve(user)
+    } catch (err) {
+      Promise.reject(new Error(err))
+    }
+  }
+
   function deleteUser (name) {
     return new Promise(function (resolve, reject) {
       return query(`
@@ -45,6 +57,7 @@ module.exports = function (pool) {
   return {
     isUser,
     createUser,
-    deleteUser
+    deleteUser,
+    getUser
   }
 }
