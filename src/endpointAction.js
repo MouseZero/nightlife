@@ -52,9 +52,24 @@ async function actionConfirm (argArray, fn) {
   }
 }
 
+async function searchLocation (keyword) {
+  try {
+    return Promise.resolve({
+      success: true,
+      msg: 'nothing really',
+      keyword
+    })
+  } catch (err) {
+    return Promise.resolve({
+      success: true
+    })
+  }
+}
+
 module.exports = {
   testEndpoint,
   addUser,
   authenticate,
-  removeUser
+  removeUser,
+  searchLocation
 }

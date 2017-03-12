@@ -48,5 +48,9 @@ module.exports = function routes () {
     })
   })
 
+  router.get('/search/:location', async function (req, res) {
+    res.json(await endpointAction.searchLocation(req.params.location))
+  })
+
   return router
 }
