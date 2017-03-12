@@ -11,6 +11,12 @@ module.exports = function routes () {
     res.json(endPointAction.testEndPoint())
   })
 
+  router.post('/user', async function (req, res) {
+    const name = req.body.name
+    const password = req.body.password
+    res.json(await endPointAction.addUser(name, password, usersDb))
+  })
+
   router.post('/authenticate', async function (req, res) {
     const name = req.body.name
     const password = req.body.password
