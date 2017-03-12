@@ -2,14 +2,14 @@ const { expect } = require('chai')
 const {describe, it} = require('mocha')
 const {
   addUser,
-  deleteUserInject,
+  removeUser,
   authenticate
  } = require('./endpointAction')
 const TESTUSER = 'bill'
 const TESTPASS = 'password'
 
 describe('Should be able to control user opperations', function () {
-  describe('createUserInject', function () {
+  describe('addUser', function () {
     it('should retern success if makeUser is successful', async function () {
       const createUser = () => Promise.resolve(true)
       const result = await addUser(TESTUSER, TESTPASS, {createUser})
@@ -23,16 +23,16 @@ describe('Should be able to control user opperations', function () {
     })
   })
 
-  describe('deleteUserInject', function () {
+  describe('removeUser', function () {
     it('should return as success when it is a success', async function () {
       const deleteUser = () => Promise.resolve()
-      const result = await deleteUserInject(TESTUSER, {deleteUser})
+      const result = await removeUser(TESTUSER, {deleteUser})
       expect(result.success).to.equal(true)
     })
 
     it('should git a false success for failed delete', async function () {
       const deleteUser = () => Promise.reject(new Error('some error'))
-      const result = await deleteUserInject(TESTUSER, {deleteUser})
+      const result = await removeUser(TESTUSER, {deleteUser})
       expect(result.success).to.equal(false)
     })
   })

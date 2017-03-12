@@ -1,7 +1,4 @@
-const pg = require('pg')
-const { database: config, secret } = require('../config.json')
-const pool = new pg.Pool(config)
-const users = require('./persistence/usersFactory')(pool)
+const { secret } = require('../config.json')
 const jwt = require('jsonwebtoken')
 
 function testEndpoint () {
@@ -9,11 +6,6 @@ function testEndpoint () {
     success: true,
     msg: 'The api is up and running'
   }
-}
-
-function deleteUserInterface (name) {
-  const { deleteUser } = users
-  return deleteUserInject(name, deleteUser)
 }
 
 async function authenticate ([name, password], { getUser }) {
@@ -44,8 +36,8 @@ async function addUser (name, password, { createUser }) {
   return await actionConfirm([name, password], createUser)
 }
 
-async function deleteUserInject (name, { deleteUser }) {
-  return await actionConfirm([name], deleteUser)
+async function removeUser (id, { deleteUser }) {
+  return await actionConfirm([id], deleteUser)
 }
 
 async function actionConfirm (argArray, fn) {
@@ -63,8 +55,6 @@ async function actionConfirm (argArray, fn) {
 module.exports = {
   testEndpoint,
   addUser,
-  deleteUserInterface,
   authenticate,
-  // Functions For Testing
-  deleteUserInject
+  removeUser
 }
