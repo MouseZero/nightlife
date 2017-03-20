@@ -7,8 +7,8 @@ query(`
   CREATE TABLE public.users
   (
     id SERIAL,
-    name character(25),
-    password character(300),
+    name varchar(25),
+    password varchar(300),
     CONSTRAINT id PRIMARY KEY (id),
     CONSTRAINT name UNIQUE (name)
   )
@@ -16,7 +16,7 @@ query(`
     OIDS=FALSE
   );
   ALTER TABLE public.users
-    OWNER TO dev;
+    OWNER TO ${config.user};
 `)
 .then(function (x) {
   console.log('Created users table')
