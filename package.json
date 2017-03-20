@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "test": "find ./ -name '*.spec.js' | xargs mocha -R spec",
+    "tdd": "find ./ -name '*.spec.js' | xargs mocha -R min -w",
     "db:setup:tables": "node tools/database/setupTables.js"
   },
   "keywords": [],
