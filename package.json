@@ -7,7 +7,8 @@
     "start": "node index.js",
     "test": "find ./ -name '*.spec.js' | xargs mocha -R spec",
     "tdd": "find ./ -name '*.spec.js' | xargs mocha -R min -w",
-    "db:setup:tables": "node tools/database/setupTables.js"
+    "db:setup:tables": "node tools/database/setupTables.js",
+    "cover": "nyc npm test"
   },
   "keywords": [],
   "author": "",
@@ -27,6 +28,7 @@
     "eslint-plugin-promise": "3.5.0",
     "eslint-plugin-standard": "2.1.1",
     "mocha": "3.2.0",
+    "nyc": "^10.1.2",
     "supertest": "3.0.0"
   }
 }

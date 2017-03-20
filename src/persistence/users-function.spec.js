@@ -1,10 +1,10 @@
 const { expect } = require('chai')
 const usersFactory = require('./users-factory')
-const { Client, Pool } = require('pg')
+const { Pool } = require('pg')
 const { database: config } = require('../../config.json')
 
 describe('UserFactory', function () {
-  const db = new Pool(config);
+  const db = new Pool(config)
   let users
 
   beforeEach(() => {
