@@ -72,6 +72,26 @@ describe('usersRoutes', () => {
     })
   })
 
+  describe('notExist', () => {
+    let middleware
+
+    beforeEach(() => {
+      middleware = usersRoutes.notExist(users)
+    })
+
+    context('when the user is found', () => {
+      it('advanced to the next middleware', async () => {
+        const setup = (req, res, next) => {
+          req.body.id = 5
+          stub(users, 'isId').returns(Promise.resolve())
+          next()
+        }
+        const [ err ] = await run(setup, middleware)
+        expect(users.isId).to.have.been.calledWith(5)
+      })
+    })
+  })
+
   describe('create', () => {
     let middleware
 

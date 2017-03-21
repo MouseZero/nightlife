@@ -17,6 +17,12 @@ const create = users => wrap(async ({ body }, res) => {
   res.sendStatus(201)
 })
 
+const notExist = users => wrap(async ({ body: {id} }, res, next) => {
+  const exists = await users.isId(id)
+  if (exists) return res.sendStatus(400)
+  next()
+})
+
 const remove = users => wrap(async ({ params: { id } }, res) => {
   await users.remove(id)
   if (await users.remove(id)) {
@@ -41,5 +47,6 @@ Object.assign(module.exports, {
   findOne,
   exists,
   create,
-  remove
+  remove,
+  notExist
 })
