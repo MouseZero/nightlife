@@ -36,11 +36,11 @@ describe('usersRoutes', () => {
     })
   })
 
-  describe('exists', () => {
+  describe('notUserNameExist', () => {
     let middleware
 
     beforeEach(() => {
-      middleware = usersRoutes.exists(users)
+      middleware = usersRoutes.notUserWithName(users)
     })
 
     context('when the user is found', () => {
@@ -76,7 +76,7 @@ describe('usersRoutes', () => {
     let middleware
 
     beforeEach(() => {
-      middleware = usersRoutes.notExist(users)
+      middleware = usersRoutes.userWithId(users)
     })
 
     context('when the user is found', () => {
@@ -86,7 +86,10 @@ describe('usersRoutes', () => {
           stub(users, 'isId').returns(Promise.resolve())
           next()
         }
-        const [ err ] = await run(setup, middleware)
+        const nextWas = stub()
+        const [ err ] = await run(setup, middleware, nextWas)
+        expect(err).to.equal(null)
+        expect(nextWas.called).to.equal(true)
         expect(users.isId).to.have.been.calledWith(5)
       })
     })

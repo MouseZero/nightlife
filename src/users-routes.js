@@ -6,7 +6,7 @@ const findOne = users => wrap(async ({ params: { name } }, res) => {
   res.json(user)
 })
 
-const exists = users => wrap(async ({ body: { name } }, res, next) => {
+const notUserWithName = users => wrap(async ({ body: { name } }, res, next) => {
   const exists = await users.is(name)
   if (exists) return res.sendStatus(400)
   next()
@@ -17,9 +17,9 @@ const create = users => wrap(async ({ body }, res) => {
   res.sendStatus(201)
 })
 
-const notExist = users => wrap(async ({ body: {id} }, res, next) => {
+const userWithId = users => wrap(async ({ body: {id} }, res, next) => {
   const exists = await users.isId(id)
-  if (exists) return res.sendStatus(400)
+  if (!exists) return res.sendStatus(400)
   next()
 })
 
@@ -37,7 +37,7 @@ module.exports = function usersRoutes (users) {
 
   router
     .get('/:username', findOne(users))
-    .post('/', exists(users), create(users))
+    .post('/', notUserWithName(users), create(users))
     .delete('/', remove(users))
 
   return router
@@ -45,8 +45,8 @@ module.exports = function usersRoutes (users) {
 
 Object.assign(module.exports, {
   findOne,
-  exists,
+  notUserWithName,
   create,
   remove,
-  notExist
+  userWithId
 })
