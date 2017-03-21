@@ -2,12 +2,12 @@
 module.exports = function usersFactory (db) {
   return { create, is, get, remove }
 
-  async function create (name, password) {
+  async function create (user) {
     await db.query(`
       insert into users
       (name, password)
       values ($1, $2)
-    `, [name, password])
+    `, [user.name, user.password])
     return true
   }
 

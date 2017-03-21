@@ -23,10 +23,10 @@ describe('usersRoutes', () => {
       middleware = usersRoutes.findOne(users)
     })
 
-    it('finds a user by username', async () => {
-      const user = { username: 'foo' }
+    it('finds a user by name', async () => {
+      const user = { name: 'foo' }
       const setup = (req, res, next) => {
-        req.params.username = 'foo'
+        req.params.name = 'foo'
         stub(users, 'get').returns(Promise.resolve(user))
         spy(res, 'json')
         next()
@@ -50,7 +50,7 @@ describe('usersRoutes', () => {
     context('when the user is found', () => {
       it('sends a 400', async () => {
         const setup = (req, res, next) => {
-          req.params.username = 'foo'
+          req.body.name = 'foo'
           stub(users, 'is').returns(Promise.resolve(true))
           spy(res, 'sendStatus')
           next()
@@ -65,7 +65,7 @@ describe('usersRoutes', () => {
     context('when the user is not found', () => {
       it('advanced to the next middleware', async () => {
         const setup = (req, res, next) => {
-          req.params.username = 'foo'
+          req.body.name = 'foo'
           stub(users, 'is').returns(Promise.resolve(false))
           spy(res, 'sendStatus')
           next()

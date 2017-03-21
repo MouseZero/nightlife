@@ -2,7 +2,7 @@ const { Router } = require('express')
 const wrap = require('express-async-wrap')
 
 const findOne = users => wrap(async ({ params: { name } }, res) => {
-  const user = await users.get(username)
+  const user = await users.get(name)
   res.json(user)
 })
 
@@ -13,7 +13,7 @@ const exists = users => wrap(async ({ body: { name } }, res, next) => {
 })
 
 const create = users => wrap(async ({ body }, res) => {
-  const created = await users.create(body.name, body.password)
+  const created = await users.create(body)
   res.sendStatus(201)
 })
 
