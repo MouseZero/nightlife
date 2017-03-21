@@ -61,7 +61,6 @@ describe('UserFactory', function () {
         RETURNING
         (id);
         `)
-      console.log(id)
       const result = await users.isId(id)
       expect(result).to.equal(true)
     })

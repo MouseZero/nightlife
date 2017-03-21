@@ -12,20 +12,19 @@ module.exports = function usersFactory (db) {
   }
 
   async function is (name) {
-    const { rows } = await db.query(`
-      select *
-        from users
-       where "name" = $1
-    `, [name])
-    return !!rows.length
+    return isFeild(name, 'name')
   }
 
   async function isId (id) {
+    return isFeild(id, 'id')
+  }
+
+  async function isFeild (searchFor, columnName) {
     const { rows } = await db.query(`
-        select *
-        from users
-        where "id" = $1
-      `, [id])
+      select *
+      from users
+      where "${columnName}" = $1
+      `, [searchFor])
     return !!rows.length
   }
 
