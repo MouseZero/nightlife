@@ -1,19 +1,19 @@
 const { Router } = require('express')
 const wrap = require('express-async-wrap')
 
-const findOne = users => wrap(async ({ params: { username } }, res) => {
+const findOne = users => wrap(async ({ params: { name } }, res) => {
   const user = await users.get(username)
   res.json(user)
 })
 
-const exists = users => wrap(async ({ params: { username } }, res, next) => {
-  const exists = await users.is(username)
+const exists = users => wrap(async ({ body: { name } }, res, next) => {
+  const exists = await users.is(name)
   if (exists) return res.sendStatus(400)
   next()
 })
 
 const create = users => wrap(async ({ body }, res) => {
-  const created = await users.create(body)
+  const created = await users.create(body.name, body.password)
   res.sendStatus(201)
 })
 

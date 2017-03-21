@@ -6,7 +6,7 @@ const bodyParser = require('body-parser')
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
 
-app.use('/', routes())
+app.use('/', routes)
 
 app.listen(PORT, function () {
   console.log(`App is listening on port ${PORT}`)
