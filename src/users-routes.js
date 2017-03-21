@@ -17,6 +17,15 @@ const create = users => wrap(async ({ body }, res) => {
   res.sendStatus(201)
 })
 
+const remove = users => wrap(async ({ params: { id } }, res) => {
+  const deleteCount = await users.remove(id)
+  if (await users.remove(id)) {
+    res.sendStatus(200)
+  } else {
+    res.sendStatus(400)
+  }
+})
+
 module.exports = function usersRoutes(users) {
 
   const router = new Router()
@@ -24,6 +33,7 @@ module.exports = function usersRoutes(users) {
   router
     .get('/:username', findOne(users))
     .post('/', exists(users), create(users))
+    .delete('/', remove(users))
 
   return router
 }
@@ -31,5 +41,6 @@ module.exports = function usersRoutes(users) {
 Object.assign(module.exports, {
   findOne,
   exists,
-  create
+  create,
+  remove
 })

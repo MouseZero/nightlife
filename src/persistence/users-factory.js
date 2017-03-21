@@ -29,11 +29,11 @@ module.exports = function usersFactory (db) {
     return user || null
   }
 
-  function remove (id) {
-    return db.query(`
+  async function remove (id) {
+    const { rowCount } = await db.query(`
       delete from users
       where "id" = $1
     `, [id])
-    .then(() => true)
+    return rowCount || null
   }
 }

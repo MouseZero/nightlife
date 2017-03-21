@@ -14,6 +14,8 @@ describe('UserFactory', function () {
 
   afterEach(() => db.query('rollback'))
 
+  after(() => db.end())
+
   describe('create', function () {
     it('create a user', async function () {
       const result = await users.create('name', 'password')
@@ -77,9 +79,16 @@ describe('UserFactory', function () {
         `)
       expect(rows.length).to.equal(0)
     })
+
+    it('should return null if user doesn\'t exist', async () => {
+      const { rows: [{ max }] } = await db.query(`
+        SELECT MAX(id)
+        FROM users;
+        `)
+      const idThatDoesNotExist = max + 1
+      const result = await users.remove(idThatDoesNotExist)
+      expect(result).to.equal(null)
+    })
   })
 
-  after(() => {
-    db.end()
-  })
 })

@@ -103,4 +103,39 @@ describe('usersRoutes', () => {
     })
   })
 
+  describe('remove', () => {
+    let middleware
+
+    beforeEach(() => {
+      middleware = usersRoutes.remove(users)
+    })
+
+    it('removes a user', async () => {
+      const setup = (req, res, next) => {
+        req.params.id = 5
+        stub(users, 'remove').returns(Promise.resolve(1))
+        spy(res, 'sendStatus')
+        next()
+      }
+      const [ err, ,res ] = await run(setup, middleware)
+      expect(err).to.equal(null)
+      expect(users.remove).to.have.been.calledWith(5)
+      expect(res.sendStatus).to.have.been.calledWith(200)
+    })
+
+    it('remove user that isn\'t there error', async () => {
+      const setup = (req, res, next) => {
+        req.params.id = 5
+        stub(users, 'remove').returns(Promise.resolve(null))
+        spy(res, 'sendStatus')
+        next()
+      }
+      const [err, ,res ] = await run(setup, middleware)
+      expect(err).to.equal(null)
+      expect(res.sendStatus).to.have.been.calledWith(400)
+      expect(users.remove).to.have.been.calledWith(5)
+    })
+
+  })
+
 })
