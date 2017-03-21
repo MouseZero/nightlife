@@ -1,6 +1,6 @@
 
 module.exports = function usersFactory (db) {
-  return { create, is, get, remove }
+  return { create, is, get, remove, isId }
 
   async function create (user) {
     await db.query(`
@@ -17,6 +17,15 @@ module.exports = function usersFactory (db) {
         from users
        where "name" = $1
     `, [name])
+    return !!rows.length
+  }
+
+  async function isId (id) {
+    const { rows } = await db.query(`
+        select *
+        from users
+        where "id" = $1
+      `, [id])
     return !!rows.length
   }
 

@@ -41,6 +41,32 @@ describe('UserFactory', function () {
     })
   })
 
+  describe('isId', () => {
+    it('should not exist if user isn\'t in the database', async () => {
+      const { rows: [{ max }] } = await db.query(`
+        SELECT MAX(id)
+        FROM users;
+        `)
+      const idThatDoesNotExist = max + 1
+      const result = await users.isId(idThatDoesNotExist)
+      expect(result).to.equal(false)
+    })
+
+    it('should exist if there is a user', async () => {
+      const { rows: [{id}] } = await db.query(`
+        INSERT INTO users
+        (name, password)
+        values
+        ('name', 'password')
+        RETURNING
+        (id);
+        `)
+      console.log(id)
+      const result = await users.isId(id)
+      expect(result).to.equal(true)
+    })
+  })
+
   describe('get', function () {
     it('should return valid user object', async () => {
       await db.query(`
