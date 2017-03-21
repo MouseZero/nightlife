@@ -8,7 +8,6 @@ const { expect } = chai
 chai.use(sinonChai)
 
 describe('usersRoutes', () => {
-
   let users
 
   beforeEach(() => {
@@ -16,7 +15,6 @@ describe('usersRoutes', () => {
   })
 
   describe('findOne', () => {
-
     let middleware
 
     beforeEach(() => {
@@ -36,11 +34,9 @@ describe('usersRoutes', () => {
       expect(users.get).to.have.been.calledWith('foo')
       expect(res.json).to.have.been.calledWith(user)
     })
-
   })
 
   describe('exists', () => {
-
     let middleware
 
     beforeEach(() => {
@@ -67,21 +63,16 @@ describe('usersRoutes', () => {
         const setup = (req, res, next) => {
           req.body.name = 'foo'
           stub(users, 'is').returns(Promise.resolve(false))
-          spy(res, 'sendStatus')
           next()
         }
-        const [ err, , res ] = await run(setup, middleware)
+        const [ err ] = await run(setup, middleware)
         expect(err).to.equal(null)
         expect(users.is).to.have.been.calledWith('foo')
-        expect(res.sendStatus).not.to.have.been.called
       })
-
     })
-
   })
 
   describe('create', () => {
-
     let middleware
 
     beforeEach(() => {
@@ -117,7 +108,7 @@ describe('usersRoutes', () => {
         spy(res, 'sendStatus')
         next()
       }
-      const [ err, ,res ] = await run(setup, middleware)
+      const [ err, , res ] = await run(setup, middleware)
       expect(err).to.equal(null)
       expect(users.remove).to.have.been.calledWith(5)
       expect(res.sendStatus).to.have.been.calledWith(200)
@@ -130,12 +121,10 @@ describe('usersRoutes', () => {
         spy(res, 'sendStatus')
         next()
       }
-      const [err, ,res ] = await run(setup, middleware)
+      const [ err, , res ] = await run(setup, middleware)
       expect(err).to.equal(null)
       expect(res.sendStatus).to.have.been.calledWith(400)
       expect(users.remove).to.have.been.calledWith(5)
     })
-
   })
-
 })

@@ -13,12 +13,12 @@ const exists = users => wrap(async ({ body: { name } }, res, next) => {
 })
 
 const create = users => wrap(async ({ body }, res) => {
-  const created = await users.create(body)
+  await users.create(body)
   res.sendStatus(201)
 })
 
 const remove = users => wrap(async ({ params: { id } }, res) => {
-  const deleteCount = await users.remove(id)
+  await users.remove(id)
   if (await users.remove(id)) {
     res.sendStatus(200)
   } else {
@@ -26,8 +26,7 @@ const remove = users => wrap(async ({ params: { id } }, res) => {
   }
 })
 
-module.exports = function usersRoutes(users) {
-
+module.exports = function usersRoutes (users) {
   const router = new Router()
 
   router

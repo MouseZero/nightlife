@@ -49,9 +49,9 @@ describe('UserFactory', function () {
         values
         ('name', 'password');
         `)
-        const result = await users.get('name')
-        expect(result).to.include({name: 'name', password: 'password'})
-        expect(result).to.have.all.keys('id', 'name', 'password');
+      const result = await users.get('name')
+      expect(result).to.include({name: 'name', password: 'password'})
+      expect(result).to.have.all.keys('id', 'name', 'password')
     })
 
     it('should be null if there is no user with name', async () => {
@@ -62,7 +62,7 @@ describe('UserFactory', function () {
 
   describe('remove', function () {
     it('should remove the user', async () => {
-      const { rows : [{ id }] } = await db.query(`
+      const { rows: [{ id }] } = await db.query(`
         INSERT INTO users
         (name, password)
         values
@@ -90,5 +90,4 @@ describe('UserFactory', function () {
       expect(result).to.equal(null)
     })
   })
-
 })
