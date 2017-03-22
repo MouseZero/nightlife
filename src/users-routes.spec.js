@@ -80,17 +80,32 @@ describe('usersRoutes', () => {
     })
 
     context('when the user is found', () => {
-      it('advanced to the next middleware', async () => {
+      it(`advanced to the next middleware`, async () => {
         const setup = (req, res, next) => {
           req.body.id = 5
-          stub(users, 'isId').returns(Promise.resolve())
+          res.sendStatus = stub()
+          stub(users, 'isId').returns(Promise.resolve(true))
           next()
         }
-        const nextWas = stub()
-        const [ err ] = await run(setup, middleware, nextWas)
+        const [ err, , res ] = await run(setup, middleware)
         expect(err).to.equal(null)
-        expect(nextWas.called).to.equal(true)
+        expect(res.sendStatus.called).to.equal(false)
         expect(users.isId).to.have.been.calledWith(5)
+      })
+    })
+
+    context('whe the user is not found', () => {
+      it(`sends a 400`, async () => {
+        const setup = (req, res, next) => {
+          req.body.id = 5
+          spy(res, 'sendStatus')
+          stub(users, 'isId').returns(Promise.resolve(false))
+          next()
+        }
+        const [ err, , res ] = await run(setup, middleware)
+        expect(users.isId).to.have.been.calledWith(5)
+        expect(err).to.equal(null)
+        expect(res.sendStatus).to.have.been.calledWith(400)
       })
     })
   })
@@ -126,7 +141,7 @@ describe('usersRoutes', () => {
 
     it('removes a user', async () => {
       const setup = (req, res, next) => {
-        req.params.id = 5
+        req.body.id = 5
         stub(users, 'remove').returns(Promise.resolve(1))
         spy(res, 'sendStatus')
         next()
@@ -139,7 +154,7 @@ describe('usersRoutes', () => {
 
     it('remove user that isn\'t there error', async () => {
       const setup = (req, res, next) => {
-        req.params.id = 5
+        req.body.id = 5
         stub(users, 'remove').returns(Promise.resolve(null))
         spy(res, 'sendStatus')
         next()
