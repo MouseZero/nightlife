@@ -34,10 +34,18 @@ const remove = users => wrap(async ({ body: { id } }, res) => {
   }
 })
 
+const test = users => wrap(async (req, res) => {
+  res.json({
+    success: true,
+    msg: `You have hit the api. This endpoint doesn't do anything`
+  })
+})
+
 module.exports = function usersRoutes (users) {
   const router = new Router()
 
   router
+    .get('/', test(users))
     .get('/:username', findOne(users))
     .post('/', notUserWithName(users), create(users))
     .delete('/', userWithId(users), remove(users))
@@ -50,5 +58,6 @@ Object.assign(module.exports, {
   notUserWithName,
   create,
   remove,
-  userWithId
+  userWithId,
+  test
 })

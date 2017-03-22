@@ -72,6 +72,24 @@ describe('usersRoutes', () => {
     })
   })
 
+  describe(`test`, () => {
+    let middleware
+
+    beforeEach(() => {
+      middleware = usersRoutes.test(users)
+    })
+
+    it(`success if you hit the test api page`, async () => {
+      const setup = (req, res, next) => {
+        res.json = json => { res.json = json }
+        next()
+      }
+      const [ err, , { json: { success } } ] = await run(setup, middleware)
+      expect(err).to.equal(null)
+      expect(success).to.equal(true)
+    })
+  })
+
   describe('notExist', () => {
     let middleware
 
