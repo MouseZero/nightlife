@@ -85,17 +85,6 @@ describe('UserFactory', function () {
     })
   })
 
-  describe('updatePassword', () => {
-    it('should change the password of the user', async () => {
-      const { rows } = await db.query(`
-        SELECT *
-        FROM users
-        WHERE id = 7892;
-        `)
-      console.log(rows)
-    })
-  })
-
   describe('remove', function () {
     it('should remove the user', async () => {
       const { rows: [{ id }] } = await db.query(`

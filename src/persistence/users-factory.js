@@ -37,6 +37,15 @@ module.exports = function usersFactory (db) {
     return user || null
   }
 
+  // async function updatePassword (idToEdit, newPassword) {
+  //   await db.query(`
+  //     UPDATE users
+  //     SET password = $1
+  //     WHERE id = $2
+  //     `, [newPassword, idToEdit])
+  //   return true
+  // }
+
   async function remove (id) {
     const { rowCount } = await db.query(`
       delete from users
