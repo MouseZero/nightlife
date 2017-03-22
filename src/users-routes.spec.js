@@ -143,13 +143,13 @@ describe('usersRoutes', () => {
       const setup = (req, res, next) => {
         req.body.id = 5
         stub(users, 'remove').returns(Promise.resolve(1))
-        spy(res, 'sendStatus')
+        res.json = json => { res.json = json }
         next()
       }
       const [ err, , res ] = await run(setup, middleware)
       expect(err).to.equal(null)
-      expect(users.remove).to.have.been.calledWith(5)
-      expect(res.sendStatus).to.have.been.calledWith(200)
+      expect(res.json.success).to.equal(true)
+      expect(!!res.json.msg).to.equal(true)
     })
 
     it('remove user that isn\'t there error', async () => {
