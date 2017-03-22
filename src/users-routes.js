@@ -23,8 +23,7 @@ const userWithId = users => wrap(async ({ body: {id} }, res, next) => {
   next()
 })
 
-const remove = users => wrap(async ({ params: { id } }, res) => {
-  await users.remove(id)
+const remove = users => wrap(async ({ body: { id } }, res) => {
   if (await users.remove(id)) {
     res.sendStatus(200)
   } else {
@@ -38,7 +37,7 @@ module.exports = function usersRoutes (users) {
   router
     .get('/:username', findOne(users))
     .post('/', notUserWithName(users), create(users))
-    .delete('/', remove(users))
+    .delete('/', userWithId(users), remove(users))
 
   return router
 }
