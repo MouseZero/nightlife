@@ -25,7 +25,10 @@ const userWithId = users => wrap(async ({ body: {id} }, res, next) => {
 
 const remove = users => wrap(async ({ body: { id } }, res) => {
   if (await users.remove(id)) {
-    res.sendStatus(200)
+    res.json({
+      success: true,
+      msg: `removed user with id: ${id}`
+    })
   } else {
     res.sendStatus(400)
   }
