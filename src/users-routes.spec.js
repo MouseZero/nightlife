@@ -94,7 +94,7 @@ describe('usersRoutes', () => {
       })
     })
 
-    context('whe the user is not found', () => {
+    context('when the user is not found', () => {
       it(`sends a 400`, async () => {
         const setup = (req, res, next) => {
           req.body.id = 5
