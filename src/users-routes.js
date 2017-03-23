@@ -34,8 +34,8 @@ const remove = users => wrap(async ({ body: { id } }, res) => {
   }
 })
 
-const update = users => wrap(async ({ body: {id, newPassword} }, res) => {
-  const result = await users.updatePassword(id, newPassword)
+const update = users => wrap(async ({ body: {id, password} }, res) => {
+  const result = await users.updatePassword(id, password)
   if (result) {
     return res.json({
       success: true
@@ -59,6 +59,7 @@ module.exports = function usersRoutes (users) {
     .get('/:username', findOne(users))
     .post('/', notUserWithName(users), create(users))
     .delete('/', userWithId(users), remove(users))
+    .put('/', userWithId(users), update(users))
 
   return router
 }

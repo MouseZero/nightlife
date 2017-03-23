@@ -43,7 +43,7 @@ describe('usersRoutes', () => {
     it(`calls to update user`, async () => {
       const setup = (req, res, next) => {
         req.body.id = 1
-        req.body.newPassword = 'newPassword'
+        req.body.password = 'newPassword'
         res.json = (json) => { res.json = json }
         stub(users, 'updatePassword').returns(Promise.resolve(true))
         res.sendStatus = stub()
