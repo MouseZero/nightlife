@@ -34,6 +34,13 @@ const remove = users => wrap(async ({ body: { id } }, res) => {
   }
 })
 
+const update = users => wrap(async ({ body: {id, newPassword} }, res) => {
+  await users.updatePassword(id, newPassword)
+  res.json({
+    success: true
+  })
+})
+
 const test = users => wrap(async (req, res) => {
   res.json({
     success: true,
@@ -59,5 +66,6 @@ Object.assign(module.exports, {
   create,
   remove,
   userWithId,
-  test
+  test,
+  update
 })

@@ -36,12 +36,29 @@ describe('usersRoutes', () => {
     })
   })
 
+  describe(`update`, () => {
+    let middleware
+    beforeEach(() => { middleware = usersRoutes.update(users) })
+
+    it(`calls to update user`, async () => {
+      const setup = (req, res, next) => {
+        req.body.id = 1
+        req.body.newPassword = 'newPassword'
+        res.json = (json) => { res.json = json }
+        stub(users, 'updatePassword').returns(Promise.resolve(true))
+        res.sendStatus = stub()
+        next()
+      }
+      const [ err, , {json} ] = await run(setup, middleware)
+      expect(err).to.equal(null)
+      expect(json.success).to.equal(true)
+      expect(users.updatePassword).to.have.been.calledWith(1, 'newPassword')
+    })
+  })
+
   describe('notUserNameExist', () => {
     let middleware
-
-    beforeEach(() => {
-      middleware = usersRoutes.notUserWithName(users)
-    })
+    beforeEach(() => { middleware = usersRoutes.notUserWithName(users) })
 
     context('when the user is found', () => {
       it('sends a 400', async () => {
