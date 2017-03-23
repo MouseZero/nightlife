@@ -35,10 +35,13 @@ const remove = users => wrap(async ({ body: { id } }, res) => {
 })
 
 const update = users => wrap(async ({ body: {id, newPassword} }, res) => {
-  await users.updatePassword(id, newPassword)
-  res.json({
-    success: true
-  })
+  const result = await users.updatePassword(id, newPassword)
+  if (result) {
+    return res.json({
+      success: true
+    })
+  }
+  return res.sendStatus(400)
 })
 
 const test = users => wrap(async (req, res) => {

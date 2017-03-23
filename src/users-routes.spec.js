@@ -54,6 +54,17 @@ describe('usersRoutes', () => {
       expect(json.success).to.equal(true)
       expect(users.updatePassword).to.have.been.calledWith(1, 'newPassword')
     })
+
+    it(`errors if there is not an existing user`, async () => {
+      const setup = (req, res, next) => {
+        stub(users, 'updatePassword').returns(Promise.resolve(null))
+        spy(res, 'sendStatus')
+        next()
+      }
+      const [ err, , {sendStatus} ] = await run(setup, middleware)
+      expect(err).to.equal(null)
+      expect(sendStatus).to.have.been.calledWith(400)
+    })
   })
 
   describe('notUserNameExist', () => {
