@@ -87,12 +87,30 @@ describe('UserFactory', function () {
 
   describe('updatePassword', () => {
     it('should change the password of the user', async () => {
-      const { rows } = await db.query(`
+      const { rows: [{id}] } = await db.query(`
+        INSERT INTO users
+        (name, password)
+        values
+        ('name', 'password')
+        RETURNING
+        (id)
+        `)
+      const result = await users.updatePassword(id, 'newPassword')
+      const { rows: [{password}] } = await db.query(`
         SELECT *
         FROM users
-        WHERE id = 7892;
-        `)
-      console.log(rows)
+        WHERE id = $1
+        `, [id])
+      expect(password).to.equal('newPassword')
+      expect(result).to.equal(true)
+    })
+
+    it(`returns null if not a success`, async () => {
+      const { rows: [{ max }] } = await db.query(`
+        SELECT MAX(id) FROM users;`)
+      const unUsedId = max + 1
+      const result = await users.updatePassword(unUsedId, 'newPassword')
+      expect(result).to.equal(null)
     })
   })
 

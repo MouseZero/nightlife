@@ -1,6 +1,6 @@
 
 module.exports = function usersFactory (db) {
-  return { create, is, get, remove, isId }
+  return { create, is, get, remove, isId, updatePassword }
 
   async function create (user) {
     await db.query(`
@@ -37,14 +37,14 @@ module.exports = function usersFactory (db) {
     return user || null
   }
 
-  // async function updatePassword (idToEdit, newPassword) {
-  //   await db.query(`
-  //     UPDATE users
-  //     SET password = $1
-  //     WHERE id = $2
-  //     `, [newPassword, idToEdit])
-  //   return true
-  // }
+  async function updatePassword (idToEdit, newPassword) {
+    const { rowCount } = await db.query(`
+      UPDATE users
+      SET password = $1
+      WHERE id = $2
+      `, [newPassword, idToEdit])
+    return !!rowCount || null
+  }
 
   async function remove (id) {
     const { rowCount } = await db.query(`
