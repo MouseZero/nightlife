@@ -24,7 +24,7 @@ describe('UserFactory', function () {
   })
 
   describe('is', function () {
-    it('should not exist if user isn\'t in the database', async () => {
+    it(`should not exist if user isn't in the database`, async () => {
       const result = await users.is('name')
       expect(result).to.equal(false)
     })
@@ -42,7 +42,7 @@ describe('UserFactory', function () {
   })
 
   describe('isId', () => {
-    it('should not exist if user isn\'t in the database', async () => {
+    it(`should not exist if user isn't in the database`, async () => {
       const { rows: [{ max }] } = await db.query(`
         SELECT MAX(id)
         FROM users;
