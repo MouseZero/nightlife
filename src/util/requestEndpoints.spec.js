@@ -5,7 +5,7 @@ const { expect } = require('chai')
 
 describe('requestEndpoints', () => {
   describe('xWwwFormUrlencodedFetch', () => {
-    context('successful response', async () => {
+    context('successful response', () => {
       let fetch
       beforeEach(() => {
         fetch = stub(t, 'fetch').callsFake((x) => {
@@ -29,7 +29,7 @@ describe('requestEndpoints', () => {
       })
     })
 
-    context('unsuccessful response', async () => {
+    context('unsuccessful response', () => {
       let fetch
       beforeEach(() => {
         fetch = stub(t, 'fetch').callsFake((x) => {
@@ -45,6 +45,31 @@ describe('requestEndpoints', () => {
           .xWwwFormUrlencodedFetch()
           .then(() => done('should have errored'))
           .catch(() => done())
+      })
+    })
+
+    context('gives the right params to fetch', async () => {
+      let fetch
+      beforeEach(() => {
+      })
+      afterEach(() => {
+        fetch.restore()
+      })
+
+      it('calls the right headers', (done) => {
+        fetch = stub(t, 'fetch').callsFake((_, { headers }) => {
+          if (
+            headers.Accept === 'application/json' &&
+            headers['Content-Type'] === 'application/x-www-form-urlencoded'
+          ) {
+            done()
+          } else {
+            done(new Error('Wrong headers'))
+          }
+
+          return Promise.resolve({ json: () => 'success' })
+        })
+        requestEndpoints(fetch).xWwwFormUrlencodedFetch()
       })
     })
   })
