@@ -35,11 +35,8 @@ const remove = users => wrap(async ({ body: { id } }, res) => {
 })
 
 const update = users => wrap(async ({ body: {id, password} }, res) => {
-  const result = await users.updatePassword(id, password)
-  if (result) {
-    return res.json({
-      success: true
-    })
+  if (await users.updatePassword(id, password)) {
+    return res.json({ success: true })
   }
   return res.sendStatus(400)
 })
