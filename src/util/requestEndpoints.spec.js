@@ -42,20 +42,14 @@ describe('requestEndpoints', () => {
     })
 
     context('gives the right params to fetch', async () => {
-      it('calls the right headers', (done) => {
+      it('calls the right header', async () => {
+        let testHeaders
         const fetch = spy((_, { headers }) => {
-          if (
-            headers.Accept === 'application/json' &&
-            headers['Content-Type'] === 'application/x-www-form-urlencoded'
-          ) {
-            done()
-          } else {
-            done(new Error('Wrong headers'))
-          }
-
-          return Promise.resolve({ json: () => 'success' })
+          testHeaders = headers
+          return Promise.resolve({json: () => 'success'})
         })
-        requestEndpoints(fetch).xWwwFormUrlencodedFetch()
+        await requestEndpoints(fetch).xWwwFormUrlencodedFetch()
+        console.log(testHeaders)
       })
     })
   })
