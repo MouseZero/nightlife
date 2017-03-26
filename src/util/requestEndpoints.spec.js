@@ -1,6 +1,5 @@
 const requestEndpoints = require('./requestEndpoints')
-const { stub } = require('sinon')
-const t = Object.assign({}, { fetch: '' })
+const { spy } = require('sinon')
 const { expect } = require('chai')
 
 describe('requestEndpoints', () => {
@@ -8,12 +7,9 @@ describe('requestEndpoints', () => {
     context('successful response', () => {
       let fetch
       beforeEach(() => {
-        fetch = stub(t, 'fetch').callsFake((x) => {
+        fetch = spy((x) => {
           return Promise.resolve({ json: () => 'success' })
         })
-      })
-      afterEach(() => {
-        fetch.restore()
       })
 
       it('calls fetch', async () => {
@@ -32,12 +28,9 @@ describe('requestEndpoints', () => {
     context('unsuccessful response', () => {
       let fetch
       beforeEach(() => {
-        fetch = stub(t, 'fetch').callsFake((x) => {
+        fetch = spy((x) => {
           return Promise.reject(new Error('err'))
         })
-      })
-      afterEach(() => {
-        fetch.restore()
       })
 
       it('throws error', (done) => {
@@ -49,15 +42,8 @@ describe('requestEndpoints', () => {
     })
 
     context('gives the right params to fetch', async () => {
-      let fetch
-      beforeEach(() => {
-      })
-      afterEach(() => {
-        fetch.restore()
-      })
-
       it('calls the right headers', (done) => {
-        fetch = stub(t, 'fetch').callsFake((_, { headers }) => {
+        const fetch = spy((_, { headers }) => {
           if (
             headers.Accept === 'application/json' &&
             headers['Content-Type'] === 'application/x-www-form-urlencoded'
