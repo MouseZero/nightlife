@@ -89,5 +89,14 @@ describe('requestEndpoints', () => {
         expect(urlCloj).to.equal('https://test.com?foo=bar&baz=qux%20quxx')
       })
     })
+
+    context('unsuccessful respones', () => {
+      it('returns error', (done) => {
+        const fetch = spy(() => Promise.reject(new Error()))
+        bearerTokenFetch(fetch)()
+          .then(() => done('should have errored out'))
+          .catch(() => done())
+      })
+    })
   })
 })
