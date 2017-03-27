@@ -19,7 +19,25 @@ module.exports = (fetch) => {
     return await answer.json()
   }
 
+  async function bearerTokenFetch (body, url, token) {
+    let formBody = []
+    for (let property in body) {
+      var encodedKey = encodeURIComponent(property)
+      var encodedValue = encodeURIComponent(body[property])
+      formBody.push(encodedKey + '=' + encodedValue)
+    }
+    formBody = formBody.join('&')
+    const urlWithQuery = (formBody) ? (url + '?' + formBody) : url
+    await fetch(urlWithQuery, {
+      method: 'GET',
+      headers: {
+        'Authorization': ('Bearer ' + token)
+      }
+    })
+  }
+
   return {
-    xWwwFormUrlencodedFetch
+    xWwwFormUrlencodedFetch,
+    bearerTokenFetch
   }
 }
