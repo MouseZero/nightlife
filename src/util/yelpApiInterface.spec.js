@@ -1,4 +1,4 @@
-const { getToken } = require('./yelpApiInterface')
+const { getToken, searchBars } = require('./yelpApiInterface')
 const sinon = require('sinon')
 const { expect } = require('chai')
 const requestEndpoints = require('./requestEndpoints')()
@@ -32,6 +32,33 @@ describe('yelpApiInterface', () => {
         done(new Error('not an https url'))
       })
       getToken(stub)()
+    })
+  })
+
+  describe('searchBars', () => {
+    let stub
+    beforeEach(() => {
+      stub = sinon.stub(requestEndpoints, 'bearerTokenFetch')
+    })
+    afterEach(() => {
+      stub.restore()
+    })
+    it(`calls endpoint`, async () => {
+      await searchBars(stub)()
+      expect(stub.called).to.equal(true)
+    })
+    it('calls endpointInterface with correct params', async () => {
+      let tBody, tUrl, tToken
+      stub.callsFake((body, url, token) => {
+        tBody = body
+        tUrl = url
+        tToken = token
+      })
+      await searchBars(stub)('irvine', 'mytoken')
+      expect(tBody.categories).to.equal('bars')
+      expect(tBody.location).to.equal('irvine')
+      expect(tUrl).to.equal('https://api.yelp.com/v3/businesses/search')
+      expect(tToken).to.equal('mytoken')
     })
   })
 })

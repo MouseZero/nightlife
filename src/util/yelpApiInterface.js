@@ -1,6 +1,9 @@
 const { yelp: { app_id, app_secret } } = require('../../config')
 const fetch = require('node-fetch')
-const { xWwwFormUrlencodedFetch } = require('./requestEndpoints')(fetch)
+const {
+  xWwwFormUrlencodedFetch,
+  bearerTokenFetch
+ } = require('./requestEndpoints')(fetch)
 
 const getToken = (endpointInterface) => async () => {
   const body = {
@@ -10,12 +13,23 @@ const getToken = (endpointInterface) => async () => {
   return await endpointInterface(body, 'https://api.yelp.com/oauth2/token')
 }
 
+const searchBars = (endpointInterface) => async (location, token) => {
+  const body = {
+    categories: 'bars',
+    location
+  }
+  endpointInterface(body, 'https://api.yelp.com/v3/businesses/search', token)
+}
+// categories=bars&location=Mission%20Viejo
+
 module.exports = () => {
   return {
-    getToken: getToken(xWwwFormUrlencodedFetch)
+    getToken: getToken(xWwwFormUrlencodedFetch),
+    searchBars: searchBars(bearerTokenFetch)
   }
 }
 
 Object.assign(module.exports, {
-  getToken
+  getToken,
+  searchBars
 })
