@@ -1,4 +1,7 @@
-const requestEndpoints = require('./requestEndpoints')
+const {
+    xWwwFormUrlencodedFetch,
+    bearerTokenFetch
+  } = require('./requestEndpoints')
 const { spy } = require('sinon')
 const { expect } = require('chai')
 
@@ -12,13 +15,11 @@ describe('requestEndpoints', () => {
         })
       })
       it('calls fetch', async () => {
-        await requestEndpoints(fetch)
-          .xWwwFormUrlencodedFetch()
+        await xWwwFormUrlencodedFetch(fetch)()
         expect(fetch.called).to.equal(true)
       })
       it('gets json from a response', async () => {
-        const result = await requestEndpoints(fetch)
-          .xWwwFormUrlencodedFetch()
+        const result = await xWwwFormUrlencodedFetch(fetch)()
         expect(result).to.equal('success')
       })
       it('calls the right header', async () => {
@@ -27,7 +28,7 @@ describe('requestEndpoints', () => {
           heads = headers
           return Promise.resolve({json: () => 'success'})
         })
-        await requestEndpoints(fetch).xWwwFormUrlencodedFetch()
+        await xWwwFormUrlencodedFetch(fetch)()
         expect(heads['Content-Type']).to.equal('application/x-www-form-urlencoded')
         expect(heads.Accept).to.equal('application/json')
       })
@@ -40,8 +41,7 @@ describe('requestEndpoints', () => {
         })
       })
       it('throws error', (done) => {
-        requestEndpoints(fetch)
-          .xWwwFormUrlencodedFetch()
+        xWwwFormUrlencodedFetch(fetch)()
           .then(() => done('should have errored'))
           .catch(() => done())
       })
@@ -54,7 +54,7 @@ describe('requestEndpoints', () => {
         const fetch = spy(() => {
           return Promise.resolve({json: () => 'success'})
         })
-        await requestEndpoints(fetch).bearerTokenFetch()
+        await bearerTokenFetch(fetch)()
         expect(fetch.called).to.equal(true)
       })
       it('calls fetch with the right options', async () => {
@@ -65,8 +65,7 @@ describe('requestEndpoints', () => {
           urlCloj = url
           return Promise.resolve({json: () => 'success'})
         })
-        await requestEndpoints(fetch)
-        .bearerTokenFetch(
+        await bearerTokenFetch(fetch)(
           {},
           'https://test.com',
           'mytoken')
@@ -80,7 +79,7 @@ describe('requestEndpoints', () => {
           urlCloj = url
           return Promise.resolve({json: () => 'success'})
         })
-        await requestEndpoints(fetch).bearerTokenFetch(
+        await bearerTokenFetch(fetch)(
           {
             foo: 'bar',
             baz: 'qux quxx'
