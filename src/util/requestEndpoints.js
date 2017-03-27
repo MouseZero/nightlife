@@ -29,12 +29,12 @@ const bearerTokenFetch = fetch => async (body, url, token) => {
   }
   formBody = formBody.join('&')
   const urlWithQuery = (formBody) ? (url + '?' + formBody) : url
-  await fetch(urlWithQuery, {
+  return (await fetch(urlWithQuery, {
     method: 'GET',
     headers: {
       'Authorization': ('Bearer ' + token)
     }
-  })
+  })).json()
 }
 
 module.exports = () => {

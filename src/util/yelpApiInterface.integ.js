@@ -15,8 +15,7 @@ describe('yelpApiInterface', () => {
   describe('searchBars', () => {
     it('Returns information about bars', async () => {
       const result = await searchBars('irvine', realToken)
-      console.log('test')
-      console.log(result)
+      expect(!!result.businesses).to.equal(true)
     })
   })
 })
