@@ -18,9 +18,8 @@ const searchBars = (endpointInterface) => async (location, token) => {
     categories: 'bars',
     location
   }
-  endpointInterface(body, 'https://api.yelp.com/v3/businesses/search', token)
+  return await endpointInterface(body, 'https://api.yelp.com/v3/businesses/search', token)
 }
-// categories=bars&location=Mission%20Viejo
 
 module.exports = () => {
   return {

@@ -60,5 +60,11 @@ describe('yelpApiInterface', () => {
       expect(tUrl).to.equal('https://api.yelp.com/v3/businesses/search')
       expect(tToken).to.equal('mytoken')
     })
+    it('Errors when request fails', (done) => {
+      stub.callsFake(() => Promise.reject('error'))
+      searchBars(stub)()
+        .then(() => done('Should have thrown an error'))
+        .catch(() => done())
+    })
   })
 })

@@ -1,13 +1,22 @@
-const { getToken } = require('./yelpApiInterface')()
+const { getToken, searchBars } = require('./yelpApiInterface')()
 const { expect } = require('chai')
+let realToken
 
 describe('yelpApiInterface', () => {
   describe('getToken', () => {
-    it('Should return the right keys', async () => {
+    it('Returns the right keys', async () => {
       const result = await getToken()
-      console.log(result)
+      realToken = result.access_token
       expect(result).to.include.keys('expires_in', 'access_token', 'token_type')
       expect(result['token_type']).to.equal('Bearer')
+    })
+  })
+
+  describe('searchBars', () => {
+    it('Returns information about bars', async () => {
+      const result = await searchBars('irvine', realToken)
+      console.log('test')
+      console.log(result)
     })
   })
 })
