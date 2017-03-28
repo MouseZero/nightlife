@@ -40,7 +40,7 @@ describe('tokenFetcher', () => {
       const {token, expiresIn, issuedAt} = await yelpToToken(getToken)()
       expect(token).to.equal('mytoken')
       expect(expiresIn).to.equal(9)
-      expect(issuedAt - new Date()).to.be.within(0, 200)
+      expect(issuedAt - new Date()).to.be.within(-200, 200)
     })
     it('errors if format wrong', (done) => {
       const getToken = () => Promise.resolve({

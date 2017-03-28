@@ -1,5 +1,15 @@
-const { Router } = require('express')
+const _ = require('lodash')
+// const { Router } = require('express')
 const wrap = require('express-async-wrap')
-const yelp = require('./util/yelpApiInterface')
 
-const search = (searchBar, ) => wrap(async ())
+const search = (searchBars) => wrap(async ({ body: { location } }, res) => {
+  const result = await searchBars(location)
+  res.json({
+    success: true,
+    result
+  })
+})
+
+module.exports = {
+  search
+}
