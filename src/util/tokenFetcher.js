@@ -1,24 +1,22 @@
 const BUFFER = 10000
 
 const yelpToToken = (getToken) => async () => {
-  const { access_token, expires_in } = await getToken()
-  if (!access_token || !expires_in) {
+  const { access_token: token, expires_in: expiresIn } = await getToken()
+  if (!token || !expiresIn) {
     return Promise.reject(new Error(
       'wrong format expected "access_token" & "expires_in"'
     ))
   }
   return {
-    token: access_token,
-    expiresIn: expires_in,
+    token,
+    expiresIn,
     issuedAt: new Date()
   }
 }
 
 const updateToken = (getNewToken) => async ({issuedAt, expiresIn, token}) => {
   const expires = (expiresIn + (+issuedAt)) - BUFFER
-  if (expires <= new Date()) {
-    return await getNewToken()
-  }
+  if (expires <= new Date()) return await getNewToken()
   return {issuedAt, expiresIn, token}
 }
 
