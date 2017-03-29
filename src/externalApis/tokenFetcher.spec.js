@@ -22,9 +22,13 @@ describe('tokenFetcher', () => {
         expiresIn: 1000,
         issuedAt: (new Date() - 1000000)
       }
-      const getNewToken = () => Promise.resolve({token: 'newToken'})
+      const getNewToken = () => Promise.resolve({
+        access_token: 'newtoken',
+        expires_in: 100000
+      })
       const result = await updateToken(getNewToken)(tokenObj)
-      expect(result).to.deep.equal(await getNewToken())
+      expect(result.token).to.equal('newtoken')
+      expect(result.expiresIn).to.equal(100000)
     })
   })
 

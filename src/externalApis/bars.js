@@ -1,8 +1,11 @@
 const yelp = require('./yelpApiInterface')()
+const tokenFetcher = require('./tokenFetcher')(yelp.getToken)
 let token
 
 const search = (yelp) => async (location) => {
-  token = await yelp.getToken()
+  if (!token) {
+    token = await yelp.getToken()
+  }
   return await yelp.searchBars(location, token.access_token)
 }
 
