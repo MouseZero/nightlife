@@ -1,4 +1,4 @@
-const { jwt } = require('./jwt-middleware')
+const { jwt, authenticate } = require('./jwt-middleware')
 const sinon = require('sinon')
 const run = require('express-unit')
 const jwtPromise = require('./util/jwtPromise')
@@ -46,6 +46,36 @@ describe('jwt-middleware', () => {
         expect(json.success).to.equal(false)
         expect(!!json.message).to.equal(true)
         jwtPromise.verify.restore()
+      })
+    })
+  })
+
+  describe('authenticate', () => {
+    context('user submits password and user', () => {
+      let setup
+      beforeEach(() => {
+        setup = (req, res, next) => {
+          req.body.user = 'bill'
+          req.body.password = 'password'
+          res.json = json => { res.json = json }
+          next()
+        }
+      })
+      it('should return success if password and user match', async () => {
+        const getUser = () => { return {password: 'password'} }
+        const [err, , { json }] = await run(setup, authenticate(getUser))
+        expect(err).to.equal(null)
+        expect(json.success).to.equal(true)
+      })
+      it('errors if there is no user', async () => {
+        const getUser = () => null
+        const [err] = await run(setup, authenticate(getUser))
+        expect(err).to.not.equal(null)
+      })
+      it('error if wrong password', async () => {
+        const getUser = () => { return {password: 'otherPassword'} }
+        const [err] = await run(setup, authenticate(getUser))
+        expect(err).to.not.equal(null)
       })
     })
   })

@@ -15,12 +15,21 @@ const jwt = (verify, secret) => wrap(async (req, res, next) => {
   })
 })
 
-module.exports = () => {
-  return {jwt: jwt(verify, secret)}
-}
+const authenticate = (getUser, secret) => wrap(async (req, res, next) => {
+  const user = getUser(req.body.user)
+  if (!user) throw new Error('User does not exist')
+  if (user.password !== req.body.password) throw new Error('Wrong password')
+  res.json({success: true})
+})
 
+module.exports = () => {
+  return {
+    jwt: jwt(verify, secret)
+  }
+}
 Object.assign(module.exports,
   {
-    jwt
+    jwt,
+    authenticate
   }
 )
