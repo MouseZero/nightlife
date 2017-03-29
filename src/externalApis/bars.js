@@ -6,16 +6,18 @@ const updateToken = async () => {
   return await tokenFetcher.updateToken(yelp.getToken)
 }
 
-const search = (updateToken, yelp) => async (location) => {
+const searchBars = yelp.searchBars
+
+const search = (updateToken, searchBars) => async (location) => {
   if (!token) {
     token = await updateToken()
   }
-  return await yelp.searchBars(location, token.token)
+  return await searchBars(location, token.token)
 }
 
 module.exports = () => {
   return {
-    search: search(updateToken, yelp)
+    search: search(updateToken, searchBars)
   }
 }
 Object.assign(module.exports, {

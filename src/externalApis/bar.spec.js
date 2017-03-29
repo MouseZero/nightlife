@@ -15,14 +15,14 @@ describe('bars', () => {
         let tLocation
         let tToken
         const getToken = sinon.spy(async () => {
-          return {access_token: 'mytoken'}
+          return {token: 'mytoken'}
         })
         const searchBars = sinon.spy(async (location, token) => {
           tLocation = location
           tToken = token
           return 'test'
         })
-        await search({ getToken, searchBars })('orange')
+        await search(getToken, searchBars)('orange')
         expect(getToken.called).to.equal(true)
         expect(searchBars.called).to.equal(true)
         expect(tLocation).to.equal('orange')
