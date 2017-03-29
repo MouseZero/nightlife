@@ -1,4 +1,3 @@
-// const _ = require('lodash')
 const { Router } = require('express')
 const bars = require('./externalApis/bars')
 const wrap = require('express-async-wrap')
@@ -16,6 +15,7 @@ module.exports = () => {
 
   router
     .get('/', search(bars.search))
+  return router
 }
 
 Object.assign(module.exports, {
