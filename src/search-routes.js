@@ -1,5 +1,5 @@
 const { Router } = require('express')
-const bars = require('./externalApis/bars')
+const bars = require('./externalApis/bars')()
 const wrap = require('express-async-wrap')
 
 const search = (searchBars) => wrap(async ({ body: { location } }, res) => {
