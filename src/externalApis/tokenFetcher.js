@@ -10,13 +10,13 @@ const yelpToToken = (getToken) => async () => {
   return {
     token,
     expiresIn,
-    issuedAt: new Date()
+    issuedAt: (+ new Date())
   }
 }
 
 const updateToken = (getNewToken) => async ({issuedAt, expiresIn, token}) => {
   if (!token) return await yelpToToken(getNewToken)()
-  const expires = (expiresIn + (+issuedAt)) - BUFFER
+  const expires = (expiresIn + issuedAt) - BUFFER
   if (expires <= new Date()) return await yelpToToken(getNewToken)()
   return {issuedAt, expiresIn, token}
 }

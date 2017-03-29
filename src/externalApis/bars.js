@@ -9,9 +9,7 @@ const updateToken = async () => {
 const searchBars = yelp.searchBars
 
 const search = (updateToken, searchBars) => async (location) => {
-  if (!token) {
-    token = await updateToken()
-  }
+  token = await updateToken(token)
   return await searchBars(location, token.token)
 }
 
