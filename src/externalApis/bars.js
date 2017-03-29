@@ -4,9 +4,9 @@ let token
 
 const search = (yelp) => async (location) => {
   if (!token) {
-    token = await yelp.getToken()
+    token = await tokenFetcher.updateToken(yelp.getToken)
   }
-  return await yelp.searchBars(location, token.access_token)
+  return await yelp.searchBars(location, token.token)
 }
 
 module.exports = () => {
