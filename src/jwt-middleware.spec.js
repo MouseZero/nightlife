@@ -63,7 +63,8 @@ describe('jwt-middleware', () => {
       })
       it('should return success if password and user match', async () => {
         const getUser = () => { return {password: 'password'} }
-        const [err, , { json }] = await run(setup, authenticate(getUser))
+        const middleware = authenticate(getUser, null, () => {})
+        const [err, , { json }] = await run(setup, middleware)
         expect(err).to.equal(null)
         expect(json.success).to.equal(true)
       })

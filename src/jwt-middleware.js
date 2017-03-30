@@ -1,5 +1,6 @@
 const wrap = require('express-async-wrap')
 const { verify } = require('./util/jwtPromise')
+const { sign } = require('jsonwebtoken')
 const { secret } = require('../config.json')
 
 // Middleware that requires a token for the rest of the API end points
@@ -15,16 +16,26 @@ const jwt = (verify, secret) => wrap(async (req, res, next) => {
   })
 })
 
-const authenticate = (getUser, secret) => wrap(async (req, res, next) => {
-  const user = getUser(req.body.user)
+const authenticate = (getUser, secret, sign) => wrap(async (req, res, next) => {
+  if (!req.body.user || !req.body.password) {
+    throw new Error('User name and password is required')
+  }
+  const user = await getUser(req.body.user)
   if (!user) throw new Error('User does not exist')
   if (user.password !== req.body.password) throw new Error('Wrong password')
-  res.json({success: true})
+  const token = sign({id: user.id}, secret, {
+    expiresIn: 86400
+  })
+  res.json({
+    success: true,
+    token
+  })
 })
 
-module.exports = () => {
+module.exports = (users) => {
   return {
-    jwt: jwt(verify, secret)
+    jwt: jwt(verify, secret),
+    authenticate: authenticate(users.get, secret, sign)
   }
 }
 Object.assign(module.exports,
