@@ -76,13 +76,12 @@ describe('usersRoutes', () => {
         const setup = (req, res, next) => {
           req.body.name = 'foo'
           stub(users, 'is').returns(Promise.resolve(true))
-          spy(res, 'sendStatus')
           next()
         }
-        const [ err, , res ] = await run(setup, middleware)
-        expect(err).to.equal(null)
+        const [err] = await run(setup, middleware)
+        expect(err).to.not.equal(null)
+        expect(err.statusCode).to.equal('400')
         expect(users.is).to.have.been.calledWith('foo')
-        expect(res.sendStatus).to.have.been.calledWith(400)
       })
     })
 

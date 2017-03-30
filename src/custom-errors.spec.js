@@ -3,7 +3,8 @@ const {
   NotFound,
   BadRequest,
   InternalServerError,
-  errorHandler
+  errorHandler,
+  testError
 } = require('./custom-errors')
 const { expect } = require('chai')
 const run = require('express-unit')
@@ -48,20 +49,29 @@ describe('custom-errors', () => {
 
   describe('errorHandler', () => {
     it('handles the passed in custom errors correctly', async () => {
-      let status, json
+      let status, tError
       const setup = (req, res, next) => {
         res.status = (x) => {
           status = x
           return {
-            json: (x) => { json = x }
+            json: (x) => { tError = x }
           }
         }
         next(new NotFound())
       }
       await run(setup, errorHandler)
       expect(status).to.equal('404')
-      const jsonText = JSON.stringify(json)
-      expect(JSON.parse(jsonText)).to.include.keys('statusCode', 'error', 'message')
+      expect(tError.toJSON()).to.include.keys('statusCode', 'error', 'message')
+    })
+  })
+
+  describe('testError', () => {
+    it('should return a Not Found error', async () => {
+      await run(null, testError, (err) => {
+        expect(err).to.not.equal(null)
+        expect(err.statusCode).to.equal('404')
+        expect(err.message).to.equal('This is a test error page')
+      })
     })
   })
 })

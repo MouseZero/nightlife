@@ -27,10 +27,15 @@ const errorHandler = (err, req, res, next) => {
   res.status(error.statusCode).json(error)
 }
 
+const testError = (req, res, next) => {
+  next(new NotFound('This is a test error page'))
+}
+
 module.exports = {
   CustomError,
   NotFound,
   BadRequest,
   InternalServerError,
-  errorHandler
+  errorHandler,
+  testError
 }
