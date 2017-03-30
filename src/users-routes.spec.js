@@ -46,10 +46,10 @@ describe('usersRoutes', () => {
         req.body.password = 'newPassword'
         res.json = (json) => { res.json = json }
         stub(users, 'updatePassword').returns(Promise.resolve(true))
-        res.sendStatus = stub()
+        res.status = spy()
         next()
       }
-      const [ err, , {json} ] = await run(setup, middleware)
+      const [ err, , { json } ] = await run(setup, middleware)
       expect(err).to.equal(null)
       expect(json.success).to.equal(true)
       expect(users.updatePassword).to.have.been.calledWith(1, 'newPassword')
@@ -58,12 +58,12 @@ describe('usersRoutes', () => {
     it(`errors if there is not an existing user`, async () => {
       const setup = (req, res, next) => {
         stub(users, 'updatePassword').returns(Promise.resolve(null))
-        spy(res, 'sendStatus')
+        spy(res, 'status')
         next()
       }
-      const [ err, , {sendStatus} ] = await run(setup, middleware)
+      const [ err, , {status} ] = await run(setup, middleware)
       expect(err).to.equal(null)
-      expect(sendStatus).to.have.been.calledWith(400)
+      expect(status).to.have.been.calledWith(500)
     })
   })
 
@@ -128,13 +128,13 @@ describe('usersRoutes', () => {
       it(`advanced to the next middleware`, async () => {
         const setup = (req, res, next) => {
           req.body.id = 5
-          res.sendStatus = stub()
+          res.status = stub()
           stub(users, 'isId').returns(Promise.resolve(true))
           next()
         }
         const [ err, , res ] = await run(setup, middleware)
         expect(err).to.equal(null)
-        expect(res.sendStatus.called).to.equal(false)
+        expect(res.status.called).to.equal(false)
         expect(users.isId).to.have.been.calledWith(5)
       })
     })
@@ -143,14 +143,14 @@ describe('usersRoutes', () => {
       it(`sends a 400`, async () => {
         const setup = (req, res, next) => {
           req.body.id = 5
-          spy(res, 'sendStatus')
+          spy(res, 'status')
           stub(users, 'isId').returns(Promise.resolve(false))
           next()
         }
         const [ err, , res ] = await run(setup, middleware)
         expect(users.isId).to.have.been.calledWith(5)
         expect(err).to.equal(null)
-        expect(res.sendStatus).to.have.been.calledWith(400)
+        expect(res.status).to.have.been.calledWith(400)
       })
     })
   })
@@ -167,13 +167,13 @@ describe('usersRoutes', () => {
       const setup = (req, res, next) => {
         req.body = user
         stub(users, 'create')
-        spy(res, 'sendStatus')
+        spy(res, 'status')
         next()
       }
       const [ err, , res ] = await run(setup, middleware)
       expect(err).to.equal(null)
       expect(users.create).to.have.been.calledWith(user)
-      expect(res.sendStatus).to.have.been.calledWith(201)
+      expect(res.status).to.have.been.calledWith(201)
     })
   })
 
@@ -201,12 +201,12 @@ describe('usersRoutes', () => {
       const setup = (req, res, next) => {
         req.body.id = 5
         stub(users, 'remove').returns(Promise.resolve(null))
-        spy(res, 'sendStatus')
+        spy(res, 'status')
         next()
       }
       const [ err, , res ] = await run(setup, middleware)
       expect(err).to.equal(null)
-      expect(res.sendStatus).to.have.been.calledWith(400)
+      expect(res.status).to.have.been.calledWith(500)
       expect(users.remove).to.have.been.calledWith(5)
     })
   })

@@ -16,16 +16,25 @@ const notUserWithName = users => wrap(async ({ body: { name } }, res, next) => {
 const create = users => wrap(async ({ body }, res, next) => {
   if (!body.name || !body.password) {
     next(new BadRequest(
-      'You have to pass in a name and password using x-www-form-urlencoded'
+      'needs name and password using x-www-form-urlencoded'
     ))
   }
   await users.create(body)
-  res.sendStatus(201)
+  res.status(201).json({
+    success: true,
+    message: 'Created User'
+  })
 })
 
 const userWithId = users => wrap(async ({ body: {id} }, res, next) => {
+  if (!id) next(new BadRequest('needs id using x-www-form-urlencoded'))
   const exists = await users.isId(id)
-  if (!exists) return res.sendStatus(400)
+  if (!exists) {
+    return res.status(400).json({
+      success: false,
+      message: 'There is no user with this name'
+    })
+  }
   next()
 })
 
@@ -36,15 +45,24 @@ const remove = users => wrap(async ({ body: { id } }, res) => {
       msg: `removed user with id: ${id}`
     })
   } else {
-    res.sendStatus(400)
+    res.status(500).json({
+      success: false,
+      message: `error trying to deleting user ${id}`
+    })
   }
 })
 
 const update = users => wrap(async ({ body: {id, password} }, res) => {
   if (await users.updatePassword(id, password)) {
-    return res.json({ success: true })
+    return res.json({
+      success: true,
+      message: `updated password for user ${id}`
+    })
   }
-  return res.sendStatus(400)
+  return res.status(500).json({
+    success: false,
+    message: `error trying to update password for user ${id}`
+  })
 })
 
 const test = users => wrap(async (req, res) => {
@@ -59,7 +77,7 @@ module.exports = function usersRoutes (users) {
 
   router
     .get('/', test(users))
-    .get('/:username', findOne(users))
+    .get('/:username', userWithId(users), findOne(users))
     .post('/', notUserWithName(users), create(users))
     .delete('/', userWithId(users), remove(users))
     .put('/', userWithId(users), update(users))
