@@ -12,6 +12,7 @@ const router = Router()
 module.exports = router
   .use('/users', userRoutes(usersDb))
   .post('/authenticate', authenticate)
-  .use('/search', searchRoutes)
   .get('/testError', testError)
+  // .use()
+  .use('/search', searchRoutes)
   .use(errorHandler)

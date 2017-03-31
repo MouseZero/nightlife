@@ -2,6 +2,7 @@ const wrap = require('express-async-wrap')
 const { verify } = require('./util/jwtPromise')
 const { sign } = require('jsonwebtoken')
 const { secret } = require('../config.json')
+const { BadRequest } = require('./custom-errors')
 
 // Middleware that requires a token for the rest of the API end points
 const jwt = (verify, secret) => wrap(async (req, res, next) => {
@@ -32,6 +33,10 @@ const authenticate = (getUser, secret, sign) => wrap(async (req, res, next) => {
   })
 })
 
+const mustHaveJWT = (verify, secret) => wrap(async (req, res, next) => {
+  next(new BadRequest())
+})
+
 module.exports = (users) => {
   return {
     jwt: jwt(verify, secret),
@@ -41,6 +46,7 @@ module.exports = (users) => {
 Object.assign(module.exports,
   {
     jwt,
-    authenticate
+    authenticate,
+    mustHaveJWT
   }
 )

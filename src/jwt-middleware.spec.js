@@ -1,4 +1,4 @@
-const { jwt, authenticate } = require('./jwt-middleware')
+const { jwt, authenticate, mustHaveJWT } = require('./jwt-middleware')
 const sinon = require('sinon')
 const run = require('express-unit')
 const jwtPromise = require('./util/jwtPromise')
@@ -77,6 +77,26 @@ describe('jwt-middleware', () => {
         const getUser = () => { return {password: 'otherPassword'} }
         const [err] = await run(setup, authenticate(getUser))
         expect(err).to.not.equal(null)
+      })
+    })
+  })
+
+  describe('mustHaveJWT', () => {
+    it('is a function', () => {
+      expect(mustHaveJWT).to.be.a('function')
+    })
+    it('returns a function', () => {
+      expect(mustHaveJWT).to.be.a('function')
+    })
+    context('happy path', () => {
+      it('calls verify correctly')
+      it('returns req.decoded if successful')
+      it('errors if verify false')
+    })
+    it('errors if there is no JWT', async () => {
+      await run(null, mustHaveJWT(), (err) => {
+        expect(err).to.not.equal(null)
+        expect(err).to.be.instanceof(Error)
       })
     })
   })
