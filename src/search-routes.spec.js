@@ -52,7 +52,6 @@ describe('search-routes', () => {
         expect(err).to.not.equal(null)
         expect(err).to.be.instanceof(Error)
       })
-
     })
   })
 })
