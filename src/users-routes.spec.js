@@ -5,7 +5,6 @@ const { stub, spy } = require('sinon')
 const chai = require('chai')
 const sinonChai = require('sinon-chai')
 const { expect } = chai
-const { InternalServerError }  = ('./custom-errors')
 chai.use(sinonChai)
 
 describe('usersRoutes', () => {
