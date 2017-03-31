@@ -151,7 +151,6 @@ describe('usersRoutes', () => {
           expect(err).to.not.equal(null)
         })
         expect(users.isId).to.have.been.calledWith(5)
-        expect(err).to.not.equal(null)
       })
     })
   })
