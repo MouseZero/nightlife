@@ -33,7 +33,7 @@ describe('search-routes', () => {
       const spy = sinon.spy(() => Promise.resolve(fakeResults))
       const setup = (req, res, next) => {
         req.body.location = 'irvine'
-        res.json = x => res.json = x
+        res.json = x => { res.json = x }
         next()
       }
       const [err, , {json}] = await run(setup, search(spy))
