@@ -47,5 +47,12 @@ describe('search-routes', () => {
       const [err] = await run(setup, search(spy))
       expect(!!err).to.equal(true)
     })
+    it('erros if it gets bad inputs', async () => {
+      await run(null, search(() => {}), (err) => {
+        expect(err).to.not.equal(null)
+        expect(err).to.be.instanceof(Error)
+      })
+
+    })
   })
 })
