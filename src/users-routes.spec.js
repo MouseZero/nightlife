@@ -5,6 +5,7 @@ const { stub, spy } = require('sinon')
 const chai = require('chai')
 const sinonChai = require('sinon-chai')
 const { expect } = chai
+const { InternalServerError }  = ('./custom-errors')
 chai.use(sinonChai)
 
 describe('usersRoutes', () => {
@@ -61,9 +62,9 @@ describe('usersRoutes', () => {
         spy(res, 'status')
         next()
       }
-      const [ err, , {status} ] = await run(setup, middleware)
-      expect(err).to.equal(null)
-      expect(status).to.have.been.calledWith(500)
+      const [ err ] = await run(setup, middleware)
+      expect(err).to.not.equal(null)
+      expect(err).to.be.instanceof(Error)
     })
   })
 
@@ -117,7 +118,7 @@ describe('usersRoutes', () => {
     })
   })
 
-  describe('notExist', () => {
+  describe('userWithId', () => {
     let middleware
 
     beforeEach(() => {
@@ -143,14 +144,14 @@ describe('usersRoutes', () => {
       it(`sends a 400`, async () => {
         const setup = (req, res, next) => {
           req.body.id = 5
-          spy(res, 'status')
           stub(users, 'isId').returns(Promise.resolve(false))
           next()
         }
-        const [ err, , res ] = await run(setup, middleware)
+        const [ err ] = await run(setup, middleware, (err) => {
+          expect(err).to.not.equal(null)
+        })
         expect(users.isId).to.have.been.calledWith(5)
-        expect(err).to.equal(null)
-        expect(res.status).to.have.been.calledWith(400)
+        expect(err).to.not.equal(null)
       })
     })
   })
@@ -174,6 +175,12 @@ describe('usersRoutes', () => {
       expect(err).to.equal(null)
       expect(users.create).to.have.been.calledWith(user)
       expect(res.status).to.have.been.calledWith(201)
+    })
+
+    it('not passing the right arguments', async () => {
+      const [ err ] = await run(null, middleware)
+      expect(err).to.not.equal(null)
+      expect(err).to.be.instanceof(Error)
     })
   })
 
@@ -204,9 +211,9 @@ describe('usersRoutes', () => {
         spy(res, 'status')
         next()
       }
-      const [ err, , res ] = await run(setup, middleware)
-      expect(err).to.equal(null)
-      expect(res.status).to.have.been.calledWith(500)
+      const [ err ] = await run(setup, middleware)
+      expect(err).to.not.equal(null)
+      expect(err).to.instanceof(Error)
       expect(users.remove).to.have.been.calledWith(5)
     })
   })

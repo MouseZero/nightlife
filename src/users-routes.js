@@ -1,6 +1,6 @@
 const { Router } = require('express')
 const wrap = require('express-async-wrap')
-const { BadRequest } = require('./custom-errors')
+const { BadRequest, InternalServerError } = require('./custom-errors')
 
 const findOne = users => wrap(async ({ params: { name } }, res) => {
   const user = await users.get(name)
@@ -30,39 +30,34 @@ const userWithId = users => wrap(async ({ body: {id} }, res, next) => {
   if (!id) next(new BadRequest('needs id using x-www-form-urlencoded'))
   const exists = await users.isId(id)
   if (!exists) {
-    return res.status(400).json({
-      success: false,
-      message: 'There is no user with this name'
-    })
+    next(new BadRequest('There is no user with this name'))
   }
   next()
 })
 
-const remove = users => wrap(async ({ body: { id } }, res) => {
+const remove = users => wrap(async ({ body: { id } }, res, next) => {
   if (await users.remove(id)) {
     res.json({
       success: true,
       msg: `removed user with id: ${id}`
     })
   } else {
-    res.status(500).json({
-      success: false,
-      message: `error trying to deleting user ${id}`
-    })
+    next(new InternalServerError(
+      `error trying to deleting user ${id}`
+    ))
   }
 })
 
-const update = users => wrap(async ({ body: {id, password} }, res) => {
+const update = users => wrap(async ({ body: {id, password} }, res, next) => {
   if (await users.updatePassword(id, password)) {
     return res.json({
       success: true,
       message: `updated password for user ${id}`
     })
   }
-  return res.status(500).json({
-    success: false,
-    message: `error trying to update password for user ${id}`
-  })
+  next(new InternalServerError(
+    `error trying to update password for user ${id}`
+  ))
 })
 
 const test = users => wrap(async (req, res) => {
