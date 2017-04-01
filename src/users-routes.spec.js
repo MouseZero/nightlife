@@ -146,9 +146,8 @@ describe('usersRoutes', () => {
           stub(users, 'isId').returns(Promise.resolve(false))
           next()
         }
-        await run(setup, middleware, (err) => {
-          expect(err).to.not.equal(null)
-        })
+        const [err] = await run(setup, middleware)
+        expect(err).to.not.equal(null)
         expect(users.isId).to.have.been.calledWith(5)
       })
     })

@@ -15,7 +15,7 @@ const notUserWithName = users => wrap(async ({ body: { name } }, res, next) => {
 
 const create = users => wrap(async ({ body }, res, next) => {
   if (!body.name || !body.password) {
-    next(new BadRequest(
+    return next(new BadRequest(
       'needs name and password using x-www-form-urlencoded'
     ))
   }
@@ -27,10 +27,10 @@ const create = users => wrap(async ({ body }, res, next) => {
 })
 
 const userWithId = users => wrap(async ({ body: {id} }, res, next) => {
-  if (!id) next(new BadRequest('needs id using x-www-form-urlencoded'))
+  if (!id) return next(new BadRequest('needs id using x-www-form-urlencoded'))
   const exists = await users.isId(id)
   if (!exists) {
-    next(new BadRequest('There is no user with this name'))
+    return next(new BadRequest('There is no user with this name'))
   }
   next()
 })
@@ -55,7 +55,7 @@ const update = users => wrap(async ({ body: {id, password} }, res, next) => {
       message: `updated password for user ${id}`
     })
   }
-  next(new InternalServerError(
+  return next(new InternalServerError(
     `error trying to update password for user ${id}`
   ))
 })
