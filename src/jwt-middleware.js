@@ -34,7 +34,10 @@ const authenticate = (getUser, secret, sign) => wrap(async (req, res, next) => {
 })
 
 const mustHaveJWT = (verify, secret) => wrap(async (req, res, next) => {
-  next(new BadRequest())
+  let token = req.body.token || req.query.token || req.headers['x-access-token']
+  if (!token) return next(new BadRequest())
+  req.decoded = await verify(token, secret)
+  return next()
 })
 
 module.exports = (users) => {

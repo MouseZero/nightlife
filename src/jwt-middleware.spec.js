@@ -89,8 +89,23 @@ describe('jwt-middleware', () => {
       expect(mustHaveJWT).to.be.a('function')
     })
     context('happy path', () => {
-      it('calls verify correctly')
-      it('returns req.decoded if successful')
+      it('happy path interactions work correctly', async () => {
+        let tToken, tSecret
+        const verify = (token, secret) => {
+          tToken = token
+          tSecret = secret
+          return 'decoded'
+        }
+        const setup = (req, res, next) => {
+          req.headers['x-access-token'] = 'mytoken'
+          next()
+        }
+        const [ err, req ] = await run(setup, mustHaveJWT(verify, 'mySecret'))
+        expect(err).to.equal(null)
+        expect(tToken).to.equal('mytoken')
+        expect(tSecret).to.equal('mySecret')
+        expect(req.decoded).to.equal('decoded')
+      })
       it('errors if verify false')
     })
     it('errors if there is no JWT', async () => {
