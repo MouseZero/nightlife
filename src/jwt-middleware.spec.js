@@ -1,7 +1,5 @@
-const { jwt, authenticate, mustHaveJWT } = require('./jwt-middleware')
-const sinon = require('sinon')
+const { authenticate, mustHaveJWT } = require('./jwt-middleware')
 const run = require('express-unit')
-const jwtPromise = require('./util/jwtPromise')
 const { expect } = require('chai')
 
 describe('jwt-middleware', () => {
