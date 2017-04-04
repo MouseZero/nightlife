@@ -17,7 +17,7 @@ describe('search-routes', () => {
         passed = x
       })
       const setup = (req, res, next) => {
-        req.body.location = 'irvine'
+        req.query.location = 'irvine'
         next()
       }
       await run(setup, search(spy))
@@ -32,7 +32,7 @@ describe('search-routes', () => {
       }
       const spy = sinon.spy(() => Promise.resolve(fakeResults))
       const setup = (req, res, next) => {
-        req.body.location = 'irvine'
+        req.query.location = 'irvine'
         res.json = x => { res.json = x }
         next()
       }

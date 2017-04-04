@@ -3,7 +3,7 @@ const bars = require('./externalApis/bars')()
 const wrap = require('express-async-wrap')
 const { BadRequest } = require('./custom-errors')
 
-const search = (searchBars) => wrap(async ({ body: { location } }, res, next) => {
+const search = (searchBars) => wrap(async ({ query: { location } }, res, next) => {
   if (!location) next(new BadRequest('needs location'))
   const result = await searchBars(location)
   res.json({
