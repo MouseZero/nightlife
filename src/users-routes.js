@@ -2,8 +2,8 @@ const { Router } = require('express')
 const wrap = require('express-async-wrap')
 const { BadRequest, InternalServerError } = require('./custom-errors')
 
-const findOne = users => wrap(async ({ params: { name } }, res) => {
-  const user = await users.get(name)
+const findOne = users => wrap(async ({ params: { username } }, res) => {
+  const user = await users.get(username)
   res.json(user)
 })
 
@@ -69,13 +69,16 @@ const test = users => wrap(async (req, res) => {
 
 module.exports = function usersRoutes (users) {
   const router = new Router()
+  const { mustHaveJWT } = require('./jwt-middleware')(users)
 
   router
-    .get('/', test(users))
-    .get('/:username', userWithId(users), findOne(users))
     .post('/', notUserWithName(users), create(users))
-    .delete('/', userWithId(users), remove(users))
+    .get('/', test(users))
+    // require authentication
+    .use(mustHaveJWT)
     .put('/', userWithId(users), update(users))
+    .get('/:username', findOne(users))
+    .delete('/', userWithId(users), remove(users))
 
   return router
 }
