@@ -13,6 +13,6 @@ module.exports = router
   .use('/users', userRoutes(usersDb))
   .post('/authenticate', authenticate)
   .get('/testError', testError)
-  // .use(mustHaveJWT)
+  .use(mustHaveJWT)
   .use('/search', searchRoutes)
   .use(errorHandler)
