@@ -23,13 +23,12 @@ const createUserTable = () => {
   })
 }
 
-const { database: config } = require('../../config.json')
 const createStatusTable = () => {
   return db.query(`
     CREATE TABLE public.status
     (
       id text NOT NULL,
-      "usersGoing" integer[],
+      "users_going" integer[],
       CONSTRAINT status_pkey PRIMARY KEY (id)
     )
     WITH (
