@@ -16,26 +16,17 @@ describe('status-factory', () => {
 
   after(() => db.end)
 
-  describe('addUser', () => {
+  describe('create', () => {
     it('should be an async function', () => {
-      expect(status.userGoing).to.be.a('AsyncFunction')
+      expect(status.create).to.be.a('AsyncFunction')
     })
-    it('adds first user successfully', async () => {
-      await status.userGoing(7, 'bar-id')
+    it('can create', async () => {
+      await status.create(7, 'bar-id')
       const { rows: [result] } = await db.query(`
         SELECT * FROM status WHERE id = $1;
         `, ['bar-id'])
       expect(result.id).to.equal('bar-id')
       expect(result['users_going']).to.deep.equal([7])
-    })
-    it.skip('adds user to an already existing db entry', async () => {
-      await status.userGoing(7, 'bar-id')
-      await status.userGoing(10, 'bar-id')
-      await status.userGoing(20, 'bar-id')
-      const { rows: [result] } = await db.query(`
-        SELECT * FROM status WHERE id = $1;
-        `, ['bar-id'])
-      expect(false).to.equal(true)
     })
   })
 

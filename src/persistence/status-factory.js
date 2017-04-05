@@ -1,7 +1,7 @@
 module.exports = (db) => {
-  return {userGoing, get}
+  return {create, get}
 
-  async function userGoing (userId, locationId) {
+  async function create (userId, locationId) {
     await db.query(`
       INSERT INTO status
       values
