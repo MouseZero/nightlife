@@ -1,10 +1,12 @@
 const { Router } = require('express')
 const wrap = require('express-async-wrap')
 const { BadRequest, InternalServerError } = require('./custom-errors')
+const _ = require('lodash')
 
 const findOne = users => wrap(async ({ params: { username } }, res) => {
   const user = await users.get(username)
-  res.json(user)
+  const fixedUser = _.omit(user, ['password'])
+  res.json(fixedUser)
 })
 
 const notUserWithName = users => wrap(async ({ body: { name } }, res, next) => {

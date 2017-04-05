@@ -5,6 +5,7 @@ const { stub, spy } = require('sinon')
 const chai = require('chai')
 const sinonChai = require('sinon-chai')
 const { expect } = chai
+const _ = require('lodash')
 chai.use(sinonChai)
 
 describe('usersRoutes', () => {
@@ -26,13 +27,16 @@ describe('usersRoutes', () => {
       const setup = (req, res, next) => {
         req.params.username = 'foo'
         stub(users, 'get').returns(Promise.resolve(user))
-        spy(res, 'json')
+        res.json = json => { res.json = json }
         next()
       }
-      const [ err, , res ] = await run(setup, middleware)
+      const [ err, , { json: { name, id, password } } ] =
+        await run(setup, middleware)
       expect(err).to.equal(null)
       expect(users.get).to.have.been.calledWith('foo')
-      expect(res.json).to.have.been.calledWith(user)
+      expect(name).to.equal('foo')
+      expect(id).to.equal(5)
+      expect(password).to.equal(undefined)
     })
   })
 
