@@ -21,10 +21,10 @@ describe('usersRoutes', () => {
       middleware = usersRoutes.findOne(users)
     })
 
-    it('finds a user by name', async () => {
-      const user = { name: 'foo' }
+    it('finds a user by name and returns the right info', async () => {
+      const user = { id: 5, name: 'foo', password: 'password' }
       const setup = (req, res, next) => {
-        req.params.name = 'foo'
+        req.params.username = 'foo'
         stub(users, 'get').returns(Promise.resolve(user))
         spy(res, 'json')
         next()
