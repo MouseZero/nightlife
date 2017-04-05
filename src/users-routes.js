@@ -5,8 +5,8 @@ const _ = require('lodash')
 
 const findOne = users => wrap(async ({ params: { username } }, res) => {
   const user = await users.get(username)
-  const fixedUser = _.omit(user, ['password'])
-  res.json(fixedUser)
+  const userInfo = _.omit(user, ['password'])
+  res.json(userInfo)
 })
 
 const notUserWithName = users => wrap(async ({ body: { name } }, res, next) => {
