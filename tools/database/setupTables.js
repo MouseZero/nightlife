@@ -23,6 +23,7 @@ const createUserTable = () => {
   })
 }
 
+const { database: config } = require('../../config.json')
 const createStatusTable = () => {
   return db.query(`
     CREATE TABLE public.status
