@@ -1,27 +1,47 @@
-const { database: config } = require('../../config.json')
 const pg = require('pg')
-const pool = new pg.Pool(config)
-const query = require('../../src/persistence/query')(pool)
+const { database: config } = require('../../config.json')
+const db = new pg.Pool(config)
 
-query(`
-  CREATE TABLE public.users
-  (
-    id SERIAL,
-    name varchar(25),
-    password varchar(300),
-    CONSTRAINT id PRIMARY KEY (id),
-    CONSTRAINT name UNIQUE (name)
-  )
-  WITH (
-    OIDS=FALSE
-  );
-  ALTER TABLE public.users
-    OWNER TO ${config.user};
-`)
-.then(function (x) {
-  console.log('Created users table')
-  process.exit()
-})
-.catch(function (err) {
-  console.log(err)
-})
+const createUserTable = () => {
+  return db.query(`
+    CREATE TABLE public.users
+    (
+      id SERIAL,
+      name varchar(25),
+      password varchar(300),
+      CONSTRAINT id PRIMARY KEY (id),
+      CONSTRAINT name UNIQUE (name)
+    )
+    WITH (
+      OIDS=FALSE
+    );
+    ALTER TABLE public.users
+      OWNER TO ${config.user};
+  `)
+  .then(function (x) {
+    console.log('Created users table')
+  })
+}
+
+const createStatusTable = () => {
+  return db.query(`
+    CREATE TABLE public.status
+    (
+      id text NOT NULL,
+      "usersGoing" integer[],
+      CONSTRAINT status_pkey PRIMARY KEY (id)
+    )
+    WITH (
+      OIDS=FALSE
+    );
+    ALTER TABLE public.status
+      OWNER TO ${config.user};
+    `)
+  .then(() => { console.log('Created status table') })
+}
+
+Promise.all([createUserTable(), createStatusTable()])
+  .then(() => {
+    console.log('All tables are created')
+    process.exit()
+  })
