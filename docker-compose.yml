@@ -26,7 +26,9 @@ services:
 
 
   postgres:
-    image: postgres
+    build:
+      context: .
+      dockerfile: ./docker/postgres.dockerfile
     env_file:
       - ./docker/${APP_ENV}.env
     ports:
