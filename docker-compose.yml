@@ -3,7 +3,6 @@
 # 2. docker-compose build
 # 3. docker-compose up -d
 
-
 version: '3'
 services:
   node:
@@ -14,6 +13,8 @@ services:
         type_env: ${APP_ENV}
     stdin_open: true
     tty: true
+    environment:
+      APP_ENV: ${APP_ENV}
     ports:
       - "3000:3000"
     volumes:
