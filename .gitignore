@@ -5,3 +5,4 @@ config.json
 coverage
 .nyc_output
 docker/production.env
+docker/scripts/production/node.config.json
