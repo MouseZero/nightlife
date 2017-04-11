@@ -23,5 +23,6 @@ docker attach 27762584190d
 ```
 This will put you in the node container as `root`
 ``` bash
+npm install
 npm run setupDocker
 ```
