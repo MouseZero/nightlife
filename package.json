@@ -8,6 +8,7 @@
     "test": "find ./ -name '*.spec.js' | xargs mocha -R spec",
     "test:integ": "find ./ -name '*.integ.js' | xargs mocha -R spec",
     "tdd": "find ./ -name '*.spec.js' | xargs mocha -R nyan -w",
+    "setupDocker": "./docker/scripts/setup.sh",
     "db:setup:tables": "node tools/database/setupTables.js",
     "cover": "nyc npm test"
   },
