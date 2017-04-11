@@ -4,4 +4,3 @@ config.js
 config.json
 coverage
 .nyc_output
-docker/scripts/production
