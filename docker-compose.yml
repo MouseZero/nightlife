@@ -30,7 +30,7 @@ services:
       context: .
       dockerfile: ./docker/postgres.dockerfile
     env_file:
-      - ./docker/${APP_ENV}.env
+      - ./docker/scripts/${APP_ENV}/environment.env
     ports:
       - "5432:5432"
     networks:

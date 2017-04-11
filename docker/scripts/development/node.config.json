@@ -1,9 +1,9 @@
 {
   "secret": "dev-not-so-secret",
   "database": {
-    "user": "postgres",
+    "user": "app",
     "password": "password",
-    "database": "nightlife",
+    "database": "app",
     "host": "postgres",
     "port": "5432",
     "connectionNumber": 3,
