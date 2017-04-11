@@ -10,7 +10,7 @@
     "idleTimeoutMillis": 30000
   },
   "yelp": {
-    "app_id": "",
-    "app_secret": ""
+    "app_id": "testid",
+    "app_secret": "testsecret"
   }
 }
