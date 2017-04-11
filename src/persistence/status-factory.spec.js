@@ -51,4 +51,10 @@ describe('status-factory', () => {
       expect(result.users_going).to.deep.equal([2, 8])
     })
   })
+
+  describe('delete', () => {
+    it('is an async function', () => {
+      expect(status.del).is.a('AsyncFunction')
+    })
+  })
 })
