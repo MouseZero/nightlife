@@ -53,12 +53,23 @@ describe('status-factory', () => {
   })
 
   describe('delUser', () => {
-    it('is an async function', async () => {
+    it('deletes a single user form the location', async () => {
       await db.query(`INSERT INTO status values ('some-id', ARRAY[2, 5, 9])`)
       await status.delUser('some-id', 5)
       const {rows: [result]} = await db.query(`SELECT * FROM status WHERE id = 'some-id'`)
       expect(result.id).to.equal('some-id')
       expect(result.users_going).to.deep.equal([2, 9])
+    })
+  })
+
+  describe('delAll', () => {
+    it('deletes all of the locations in the status table', async () => {
+      await db.query(`INSERT INTO status values ('some-id', ARRAY[2, 5, 9])`)
+      await db.query(`INSERT INTO status values ('some-id2', ARRAY[2, 5, 9])`)
+      await db.query(`INSERT INTO status values ('some-id3', ARRAY[2, 5, 9])`)
+      await status.delAll()
+      const {rows: [{ count }]} = await db.query(`SELECT COUNT(*) FROM status`)
+      expect(count).to.equal('0')
     })
   })
 })

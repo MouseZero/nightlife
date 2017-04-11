@@ -1,5 +1,5 @@
 module.exports = (db) => {
-  return {create, get, update, delUser}
+  return {create, get, update, delUser, delAll}
 
   async function create (locationId, userId) {
     await db.query(`
@@ -36,6 +36,12 @@ module.exports = (db) => {
       WHERE id = $2
     `, [newUsersGoing, locationId])
     return result
+  }
+
+  async function delAll () {
+    await db.query(`
+      DELETE from status;
+    `)
   }
 
 }
