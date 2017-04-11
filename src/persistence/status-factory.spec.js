@@ -52,9 +52,13 @@ describe('status-factory', () => {
     })
   })
 
-  describe('delete', () => {
-    it('is an async function', () => {
-      expect(status.del).is.a('AsyncFunction')
+  describe('delUser', () => {
+    it('is an async function', async () => {
+      await db.query(`INSERT INTO status values ('some-id', ARRAY[2, 5, 9])`)
+      await status.delUser('some-id', 5)
+      const {rows: [result]} = await db.query(`SELECT * FROM status WHERE id = 'some-id'`)
+      expect(result.id).to.equal('some-id')
+      expect(result.users_going).to.deep.equal([2, 9])
     })
   })
 })

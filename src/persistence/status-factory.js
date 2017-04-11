@@ -1,5 +1,5 @@
 module.exports = (db) => {
-  return {create, get, update, del}
+  return {create, get, update, delUser}
 
   async function create (locationId, userId) {
     await db.query(`
@@ -27,8 +27,15 @@ module.exports = (db) => {
     return result || null
   }
 
-  async function del () {
-
+  async function delUser (locationId, userId) {
+    const original = await get(locationId)
+    const newUsersGoing = original.users_going.filter((x) => userId !== x)
+    const result = await db.query(`
+      UPDATE status
+      SET users_going = $1
+      WHERE id = $2
+    `, [newUsersGoing, locationId])
+    return result
   }
 
 }
