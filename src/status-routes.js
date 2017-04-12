@@ -1,8 +1,16 @@
-const add = (statusCreate, statusGet, statusUpdate) => async (locationId, userId) => {
-	if (statusGet(locationId)) {
-		statusUpdate(locationId, userId)
+const { Router } = require('express')
+const wrap = require('express-async-wrap')
+const { BadRequest, InternalServerError } = require('./custom-errors')
+const _ = require('lodash')
+
+const addRoute = wrap(async (req, res) => {
+	res.json()
+})
+const add = ({ create, get, update}) => async (locationId, userId) => {
+	if (get(locationId)) {
+		update(locationId, userId)
 	} else {
-		statusCreate(locationId, userId)
+		create(locationId, userId)
 	}
 }
 
