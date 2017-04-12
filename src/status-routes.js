@@ -6,6 +6,10 @@ const add = (statusCreate, statusGet, statusUpdate) => async (locationId, userId
 	}
 }
 
+const get = (statusGet) => async (locationId) => {
+	statusGet(locationId)
+}
+
 module.exports = {
-	add
+	add, get
 }

@@ -1,10 +1,10 @@
-const { add } = require('./status-routes')
+const { add, get } = require('./status-routes')
 const { expect } = require('chai')
 const sinon = require('sinon')
 
 describe('bar-routes', () => {
   describe('add', () => {
-    it(`should call create if bar doesn't exists`, async () => {
+    it(`called create if bar doesn't exists`, async () => {
       let calledLocation, calledUser
       const dbCreate = (x, y) => {
         calledLocation = x
@@ -17,7 +17,7 @@ describe('bar-routes', () => {
       expect(calledLocation).to.equal('bar')
       expect(calledUser).to.equal(5)
     })
-    it(`should call "add" if there is already a bar`, async () => {
+    it(`called "add" if there is already a bar`, async () => {
       let calledLocation, calledUser
       const dbUpdate = (x, y) => {
         calledLocation = x
@@ -29,6 +29,14 @@ describe('bar-routes', () => {
       expect(dbCreate.called).to.equal(false)
       expect(calledLocation).to.equal('bar')
       expect(calledUser).to.equal(5)
+    })
+  })
+
+  describe('get', () => {
+    it(`calls statusGet with the locationId`, async () => {
+      const statusGet = sinon.spy()
+      const result = await get(statusGet)('5')
+      expect(statusGet.called).to.equal(true)
     })
   })
 })
