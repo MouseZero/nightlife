@@ -1,4 +1,4 @@
-const { search } = require('./search-routes')
+const { search, addNumberGoing } = require('./search-routes')
 const { expect } = require('chai')
 const run = require('express-unit')
 const sinon = require('sinon')
@@ -52,6 +52,16 @@ describe('search-routes', () => {
         expect(err).to.not.equal(null)
         expect(err).to.be.instanceof(Error)
       })
+    })
+  })
+
+  describe('addNumberGoing', () => {
+    it('should add "numberGoing" to data', () => {
+      const exampleData = [ { "id": "business1" }, { "id": "business2" } ]
+      const lookup = (id) => (id === "business1") ? 6 : 5
+      const result = addNumberGoing(lookup)(exampleData)
+      expect(result[0].numberGoing).to.equal(6)
+      expect(result[1].numberGoing).to.equal(5)
     })
   })
 })
