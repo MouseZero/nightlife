@@ -63,5 +63,11 @@ describe('search-routes', () => {
       expect(result[0].numberGoing).to.equal(6)
       expect(result[1].numberGoing).to.equal(5)
     })
+    it('returns zero if lookup returns null', () => {
+      const exampleData = [ { "id": "something" }]
+      const lookup = () => null
+      const result = addNumberGoing(lookup)(exampleData)
+      expect(result[0].numberGoing).to.equal(0)
+    })
   })
 })
