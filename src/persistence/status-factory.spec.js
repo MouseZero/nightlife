@@ -43,6 +43,18 @@ describe('status-factory', () => {
     })
   })
 
+  describe('getNumberOfUsers', () => {
+    it('returns the number of users', async() => {
+      await db.query(`INSERT INTO status values ('bar-id', ARRAY[20, 9, 53, 5618])`)
+      const result = await status.getNumberOfUsers('bar-id')
+      expect(result).to.equal(4)
+    })
+    it('returns 0 if there are no users', async () => {
+      const result = await status.getNumberOfUsers('some-id-not-there')
+      expect(result).to.equal(0)
+    })
+  })
+
   describe('update', () => {
     it('updates existing entry', async () => {
       await db.query(`INSERT INTO status values ('some-id', ARRAY[2])`)

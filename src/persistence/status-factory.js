@@ -1,5 +1,5 @@
 module.exports = (db) => {
-  return {create, get, update, delUser, delAll}
+  return {create, get, update, delUser, delAll, getNumberOfUsers}
 
   async function create (locationId, userId) {
     await db.query(`
@@ -25,6 +25,14 @@ module.exports = (db) => {
       SELECT * FROM status WHERE id = $1
       `, [id])
     return result || null
+  }
+
+  async function getNumberOfUsers (id) {
+    const { rows: [result] } = await db.query(`
+      SELECT * FROM status WHERE id = $1
+    `, [id])
+    if(result && result.users_going) return result.users_going.length
+    return 0
   }
 
   async function delUser (locationId, userId) {
