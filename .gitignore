@@ -4,3 +4,4 @@ config.js
 config.json
 coverage
 .nyc_output
+sampleYelpData.json
