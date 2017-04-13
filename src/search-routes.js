@@ -12,6 +12,13 @@ const search = (searchBars) => wrap(async ({ query: { location } }, res, next) =
   })
 })
 
+const addNumberGoing = (lookup) => (businesses) => {
+  return businesses.reduce((p, x) => {
+    const newX = Object.assign({}, x, {numberGoing: lookup(x.id)})
+    return [...p, newX]
+  }, [])
+}
+
 module.exports = () => {
   const router = new Router()
 
@@ -21,5 +28,6 @@ module.exports = () => {
 }
 
 Object.assign(module.exports, {
-  search
+  search,
+  addNumberGoing
 })
