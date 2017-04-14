@@ -6,12 +6,16 @@ const _ = require('lodash')
 const status = require('./persistence/status-factory.js')
 
 const search = (searchBars) => wrap(async ({ query: { location } }, res, next) => {
+  res.json(await requestBarData(searchBars, location))
+})
+
+const requestBarData = _.curry(async (searchBars, location) => {
   if (!location) next(new BadRequest('needs location'))
   const result = await searchBars(location)
-  res.json({
+  return {
     success: true,
     result
-  })
+  }
 })
 
 const addNumberGoing = _.curry((lookup, businesses) => {
