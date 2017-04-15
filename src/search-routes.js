@@ -5,18 +5,18 @@ const { BadRequest } = require('./custom-errors')
 const _ = require('lodash')
 const status = require('./persistence/status-factory.js')
 
-const search = (searchBars) => wrap(async ({ query: { location } }, res, next) => {
+const search = (searchBars, requesetBarData) => wrap(async ({ query: { location } }, res, next) => {
   res.json(await requestBarData(searchBars, location))
 })
 
-const requestBarData = _.curry(async (searchBars, location) => {
-  if (!location) next(new BadRequest('needs location'))
+const requestBarData = async (searchBars, location) => {
+  if (!location) throw new BadRequest('needs location')
   const result = await searchBars(location)
   return {
     success: true,
     result
   }
-})
+}
 
 const addNumberGoing = _.curry((lookup, businesses) => {
   return businesses.reduce((p, x) => {
@@ -36,5 +36,6 @@ module.exports = () => {
 
 Object.assign(module.exports, {
   search,
-  addNumberGoing
+  addNumberGoing,
+  requestBarData
 })

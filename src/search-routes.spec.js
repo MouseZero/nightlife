@@ -1,9 +1,25 @@
-const { search, addNumberGoing } = require('./search-routes')
-const { expect } = require('chai')
+const { search, addNumberGoing, requestBarData } = require('./search-routes')
 const run = require('express-unit')
 const sinon = require('sinon')
+const { BadRequest, NotFound } = require('./custom-errors')
+const chai = require("chai");
+const chaiAsPromised = require("chai-as-promised");
+chai.use(chaiAsPromised);
+const expect = chai.expect;
 
 describe('search-routes', () => {
+  describe('requestBarData', () => {
+    it('is Asyn Function', () => {
+      expect(requestBarData).to.be.a('AsyncFunction')
+    })
+    it('throws error if location is not passed in', () => {
+      const searchBars = () => {}
+      return expect(requestBarData(searchBars)).to.be.rejectedWith(BadRequest)
+    })
+    it('happy path')
+  })
+
+  //TODO fix this test to only test search
   describe('search', () => {
     it('should be a function', () => {
       expect(search).to.be.a('function')
