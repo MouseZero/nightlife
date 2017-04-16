@@ -5,8 +5,9 @@ const { BadRequest } = require('./custom-errors')
 const _ = require('lodash')
 const status = require('./persistence/status-factory.js')
 
-const search = (searchBars, requesetBarData) => wrap(async ({ query: { location } }, res, next) => {
-  res.json(await requestBarData(searchBars, location))
+const search = (searchBars, requestBarData) =>
+  wrap(async ({ query: { location } }, res, next) => {
+    res.json(await requestBarData(searchBars, location))
 })
 
 const requestBarData = async (searchBars, location) => {

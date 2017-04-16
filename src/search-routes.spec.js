@@ -36,7 +36,11 @@ describe('search-routes', () => {
     it('should return a function', () => {
       expect(search()).to.be.a('function')
     })
-    it('returns json from requestBarData promise')
+    it('calls requestBarData', async () => {
+      const requestBarData = sinon.spy()
+      await run(null, search(null, requestBarData))
+      expect(requestBarData.called).to.equal(true)
+    })
   })
 
   describe('addNumberGoing', () => {
