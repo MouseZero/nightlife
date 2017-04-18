@@ -28,7 +28,6 @@ describe('search-routes', () => {
     })
   })
 
-  //TODO fix this test to only test search
   describe('search', () => {
     it('should be a function', () => {
       expect(search).to.be.a('function')
@@ -36,10 +35,19 @@ describe('search-routes', () => {
     it('should return a function', () => {
       expect(search()).to.be.a('function')
     })
-    it('calls requestBarData', async () => {
-      const requestBarData = sinon.spy()
-      await run(null, search(null, requestBarData))
-      expect(requestBarData.called).to.equal(true)
+    it('calls requestBarData with the right params', async () => {
+      let argA, argB
+      const requestBarData = (a, b) => {
+        argA = a
+        argB = b
+      }
+      const setup = (req, res, next) => {
+        req.query.location = 'irvine'
+        next()
+      }
+      await run(setup, search('searchBars', requestBarData))
+      expect(argA).to.equal('searchBars')
+      expect(argB).to.equal('irvine')
     })
   })
 
