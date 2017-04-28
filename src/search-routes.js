@@ -19,6 +19,14 @@ const requestBarData = async (searchBars, location) => {
   }
 }
 
+const mergeData = _.curry((objArray, dataLabel, dataArray) => {
+  return objArray.map((x, i) => {
+    return Object.assign({}, x, {
+      [dataLabel]: dataArray[i]
+    })
+  })
+})
+
 const addNumberGoing = _.curry((lookup, businesses) => {
   return businesses.reduce((p, x) => {
     const numberGoing = (lookup(x.id)) ? lookup(x.id) : 0
@@ -38,5 +46,6 @@ module.exports = () => {
 Object.assign(module.exports, {
   search,
   addNumberGoing,
-  requestBarData
+  requestBarData,
+  mergeData
 })

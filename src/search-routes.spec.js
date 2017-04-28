@@ -1,4 +1,9 @@
-const { search, addNumberGoing, requestBarData } = require('./search-routes')
+const { 
+  search, 
+  addNumberGoing, 
+  requestBarData, 
+  mergeData 
+} = require('./search-routes')
 const run = require('express-unit')
 const sinon = require('sinon')
 const { BadRequest, NotFound } = require('./custom-errors')
@@ -48,6 +53,37 @@ describe('search-routes', () => {
       await run(setup, search('searchBars', requestBarData))
       expect(argA).to.equal('searchBars')
       expect(argB).to.equal('irvine')
+    })
+  })
+
+  describe('mergeData', () => {
+    it('adds data to object', () => {
+      const objArray = [
+        {id: 'foo'},
+        {id: 'bar'},
+        {id: 'baz'}
+      ]
+      const dataArray = ['fooer', 'barer', 'bazer']
+      const newObj = mergeData(objArray, 'newStuff', dataArray)
+      expect(newObj[0]).to.deep.equal({id: 'foo', newStuff: 'fooer'})
+      expect(newObj[1]).to.deep.equal({id: 'bar', newStuff: 'barer'})
+      expect(newObj[2]).to.deep.equal({id: 'baz', newStuff: 'bazer'})
+    })
+    it('does note alter original', () => {
+      const objArray = [
+        {id: 'foo'},
+        {id: 'bar'},
+        {id: 'baz'}
+      ]
+      const objArrayCopy = objArray.map(x => Object.assign({}, x))
+      const dataArray = ['fooer', 'barer', 'bazer']
+      const dataArrayCopy = dataArray.slice()
+      const newObj = mergeData(
+        objArrayCopy, 
+        'newStuff', 
+        dataArrayCopy)
+      expect(objArrayCopy).to.deep.equal(objArray)
+      expect(dataArrayCopy).to.deep.equal(dataArray)
     })
   })
 
