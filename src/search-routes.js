@@ -8,7 +8,7 @@ const status = require('./persistence/status-factory.js')
 const search = (searchBars, requestBarData) =>
   wrap(async ({ query: { location } }, res, next) => {
     res.json(await requestBarData(searchBars, location))
-})
+  })
 
 const requestBarData = async (searchBars, location) => {
   if (!location) throw new BadRequest('needs location')

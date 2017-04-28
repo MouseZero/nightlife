@@ -10,6 +10,7 @@
     "tdd": "find ./ -name '*.spec.js' | xargs mocha -R nyan -w",
     "setupDocker": "./docker/scripts/setup.sh",
     "db:setup:tables": "node tools/database/setupTables.js",
+    "db:setup:data": "node tools/database/setupTestData.js",
     "cover": "nyc npm test"
   },
   "keywords": [],
