@@ -5,6 +5,15 @@ const { BadRequest } = require('./custom-errors')
 const _ = require('lodash')
 const status = require('./persistence/status-factory.js')
 
+const going = (status) =>
+  wrap(async ({body: { bar_id, user_id }}, res, next) => {
+    res.json({
+      success: true,
+      bar_id,
+      user_id
+    })
+  })
+
 const search = (searchBars, requestBarData) =>
   wrap(async ({ query: { location } }, res, next) => {
     res.json(await requestBarData(searchBars, location))
@@ -40,6 +49,7 @@ module.exports = () => {
 
   router
     .get('/', search(bars.search))
+    .post('/going', going(status))
   return router
 }
 
