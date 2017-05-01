@@ -5,16 +5,12 @@ const { BadRequest } = require('./custom-errors')
 const _ = require('lodash')
 const status = require('./persistence/status-factory.js')
 
-const going = (update) =>
+const going = (implementer, update) =>
   wrap(async ({body: { bar_id, user_id }}, res, next) => {
-    res.json({
-      success: true,
-      bar_id,
-      user_id
-    })
+    res.json(await implementer(update, bar_id, user_id))
   })
 
-const goingAct = async (update, barId, userId) => {
+const goingImplementer = async (update, barId, userId) => {
   try {
     await update(barId, userId)
     return {
@@ -73,5 +69,5 @@ Object.assign(module.exports, {
   addNumberGoing,
   requestBarData,
   mergeData,
-  goingAct
+  goingImplementer
 })

@@ -3,7 +3,7 @@ const {
   addNumberGoing,
   requestBarData,
   mergeData,
-  goingAct
+  goingImplementer
 } = require('./search-routes')
 const run = require('express-unit')
 const { BadRequest } = require('./custom-errors')
@@ -84,10 +84,10 @@ describe('search-routes', () => {
     })
   })
 
-  describe('goingAct', () => {
+  describe('goingImplementer', () => {
     it('returns success for resolved update', async () => {
       const update = () => Promise.resolve()
-      const result = await goingAct(update)
+      const result = await goingImplementer(update)
       expect(result.success).to.equal(true)
     })
     it('calls update with barId and users', async () => {
@@ -96,13 +96,13 @@ describe('search-routes', () => {
         barId = a
         userId = b
       }
-      await goingAct(update, 'bar1', 5)
+      await goingImplementer(update, 'bar1', 5)
       expect(barId).to.equal('bar1')
       expect(userId).to.equal(5)
     })
     it('reutrns success false for update reject promise', async () => {
       const update = () => Promise.reject(new Error())
-      const result = await goingAct(update)
+      const result = await goingImplementer(update)
       expect(result.success).to.equal(false)
     })
   })
