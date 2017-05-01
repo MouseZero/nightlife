@@ -5,7 +5,7 @@ const { BadRequest } = require('./custom-errors')
 const _ = require('lodash')
 const status = require('./persistence/status-factory.js')
 
-const going = (status) =>
+const going = (update) =>
   wrap(async ({body: { bar_id, user_id }}, res, next) => {
     res.json({
       success: true,
@@ -13,6 +13,21 @@ const going = (status) =>
       user_id
     })
   })
+
+const goingAct = async (update, barId, userId) => {
+  try {
+    await update(barId, userId)
+    return {
+      success: true,
+      msg: 'user added to location'
+    }
+  } catch (err) {
+    return {
+      success: false,
+      msg: 'could not add user to location'
+    }
+  }
+}
 
 const search = (searchBars, requestBarData) =>
   wrap(async ({ query: { location } }, res, next) => {
@@ -57,5 +72,6 @@ Object.assign(module.exports, {
   search,
   addNumberGoing,
   requestBarData,
-  mergeData
+  mergeData,
+  goingAct
 })

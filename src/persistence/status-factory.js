@@ -10,6 +10,7 @@ module.exports = (db) => {
   }
 
   async function update (locationId, newUserId) {
+    // TODO could have issues with multi users hitting db
     const old = await get(locationId)
     const newArray = [...old.users_going, newUserId]
     const result = await db.query(`

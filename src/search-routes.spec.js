@@ -2,7 +2,8 @@ const {
   search,
   addNumberGoing,
   requestBarData,
-  mergeData
+  mergeData,
+  goingAct
 } = require('./search-routes')
 const run = require('express-unit')
 const { BadRequest } = require('./custom-errors')
@@ -80,6 +81,29 @@ describe('search-routes', () => {
       mergeData(objArrayCopy, 'newStuff', dataArrayCopy)
       expect(objArrayCopy).to.deep.equal(objArray)
       expect(dataArrayCopy).to.deep.equal(dataArray)
+    })
+  })
+
+  describe('goingAct', () => {
+    it('returns success for resolved update', async () => {
+      const update = () => Promise.resolve()
+      const result = await goingAct(update)
+      expect(result.success).to.equal(true)
+    })
+    it('calls update with barId and users', async () => {
+      let barId, userId
+      const update = (a, b) => {
+        barId = a
+        userId = b
+      }
+      await goingAct(update, 'bar1', 5)
+      expect(barId).to.equal('bar1')
+      expect(userId).to.equal(5)
+    })
+    it('reutrns success false for update reject promise', async () => {
+      const update = () => Promise.reject(new Error())
+      const result = await goingAct(update)
+      expect(result.success).to.equal(false)
     })
   })
 
