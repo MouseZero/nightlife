@@ -17,7 +17,6 @@ const goingImplementer = async (add, barId, userId) => {
       msg: 'user added to location'
     }
   } catch (err) {
-    console.log(err)
     return {
       success: false,
       msg: 'could not add user to location'

@@ -84,6 +84,11 @@ describe('search-routes', () => {
     })
   })
 
+  describe('going', () => {
+    it('calls implementer with right arguments')
+    it('gets user from JWT not body')
+  })
+
   describe('goingImplementer', () => {
     it('returns success for resolved update', async () => {
       const update = () => Promise.resolve()
