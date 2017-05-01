@@ -58,6 +58,7 @@ describe('status-factory', () => {
   describe('add', () => {
     it('adds entry to empty db')
     it('updates existing entry in db')
+    it('cannot add duplicate records')
   })
 
   describe('update', () => {

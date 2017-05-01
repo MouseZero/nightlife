@@ -3,21 +3,21 @@ const bars = require('./externalApis/bars')()
 const wrap = require('express-async-wrap')
 const { BadRequest } = require('./custom-errors')
 const _ = require('lodash')
-const status = require('./persistence/status-factory.js')
 
-const going = (implementer, update) =>
+const going = (implementer, add) =>
   wrap(async ({body: { bar_id, user_id }}, res, next) => {
-    res.json(await implementer(update, bar_id, user_id))
+    res.json(await implementer(add, bar_id, user_id))
   })
 
-const goingImplementer = async (update, barId, userId) => {
+const goingImplementer = async (add, barId, userId) => {
   try {
-    await update(barId, userId)
+    await add(barId, userId)
     return {
       success: true,
       msg: 'user added to location'
     }
   } catch (err) {
+    console.log(err)
     return {
       success: false,
       msg: 'could not add user to location'
@@ -55,12 +55,12 @@ const addNumberGoing = _.curry((lookup, businesses) => {
   }, [])
 })
 
-module.exports = () => {
+module.exports = (status) => {
   const router = new Router()
 
   router
     .get('/', search(bars.search))
-    .post('/going', going(status))
+    .post('/', going(goingImplementer, status.add))
   return router
 }
 
