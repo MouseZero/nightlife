@@ -9,7 +9,7 @@ describe('bar-routes', () => {
       const create = (x, y) => {
         calledLocation = x
         calledUser = y
-      } 
+      }
       const update = sinon.spy()
       const get = () => null
       await add({create, get, update})('bar', 5)
@@ -35,7 +35,7 @@ describe('bar-routes', () => {
   describe('get', () => {
     it(`calls statusGet with the locationId`, async () => {
       const statusGet = sinon.spy()
-      const result = await get(statusGet)('5')
+      await get(statusGet)('5')
       expect(statusGet.called).to.equal(true)
     })
   })
