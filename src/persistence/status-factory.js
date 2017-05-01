@@ -31,7 +31,7 @@ module.exports = (db) => {
     const { rows: [result] } = await db.query(`
       SELECT * FROM status WHERE id = $1
     `, [id])
-    if(result && result.users_going) return result.users_going.length
+    if (result && result.users_going) return result.users_going.length
     return 0
   }
 
