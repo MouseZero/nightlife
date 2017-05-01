@@ -55,6 +55,11 @@ describe('status-factory', () => {
     })
   })
 
+  describe('add', () => {
+    it('adds entry to empty db')
+    it('updates existing entry in db')
+  })
+
   describe('update', () => {
     it('updates existing entry', async () => {
       await db.query(`INSERT INTO status values ('some-id', ARRAY[2])`)
