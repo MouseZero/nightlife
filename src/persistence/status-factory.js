@@ -13,7 +13,7 @@ module.exports = (db) => {
     // TODO could have issues with multi users hitting db
     const old = await get(locationId)
     if (old.users_going.includes(newUserId)) {
-      return new Error('User is already going to this location')
+      throw new Error('User is already going to this location')
     }
     const newArray = [...old.users_going, newUserId]
     const result = await db.query(`
@@ -26,7 +26,11 @@ module.exports = (db) => {
 
   async function add (locationId, userId) {
     if (await get(locationId)) {
-      return await update(locationId, userId)
+      try {
+        return await update(locationId, userId)
+      } catch (err) {
+        return err
+      }
     } else {
       return await create(locationId, userId)
     }

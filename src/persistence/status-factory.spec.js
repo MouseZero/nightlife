@@ -98,7 +98,9 @@ describe('status-factory', () => {
         .then(() => {
           done('should have thrown an error')
         })
-        .catch(() => {done()})
+        .catch(() => {
+          done()
+        })
     })
   })
 
