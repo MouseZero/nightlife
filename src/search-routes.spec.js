@@ -84,22 +84,17 @@ describe('search-routes', () => {
 
   describe('going', () => {
     it('calls implementer with right arguments', async () => {
-      let passedAdd, bar, user
-      const add = 'foo'
-      const implementer = (a, params) => {
-        passedAdd = a
-        bar = params['bar_id']
-        user = params['id']
-      }
       const setup = (req, res, next) => {
         req.body.bar_id = 'bar1'
         req.decoded = {id: 5}
         next()
       }
-      await run(setup, going(implementer, add))
-      expect(passedAdd).to.equal(add)
-      expect(bar).to.equal('bar1')
-      expect(user).to.equal(5)
+      const spy = sinon.spy()
+      await run(setup, going(spy, 'foo'))
+      const args = spy.lastCall.args
+      expect(args[0]).to.equal('foo')
+      expect(args[1]['bar_id']).to.equal('bar1')
+      expect(args[1]['id']).to.equal(5)
     })
   })
 
