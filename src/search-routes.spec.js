@@ -1,7 +1,7 @@
 const {
   search,
   addNumberGoing,
-  requestBarData,
+  searchImplementer,
   mergeData,
   goingImplementer,
   going
@@ -16,20 +16,20 @@ const expect = chai.expect
 describe('search-routes', () => {
   describe('requestBarData', () => {
     it('is Asyn Function', () => {
-      expect(requestBarData).to.be.a('AsyncFunction')
+      expect(searchImplementer).to.be.a('AsyncFunction')
     })
     it('throws error if location is not passed in', () => {
       const searchBars = () => {}
-      return expect(requestBarData(searchBars)).to.be.rejectedWith(BadRequest)
+      return expect(searchImplementer(searchBars)).to.be.rejectedWith(BadRequest)
     })
     it('throws error if searchBars fails', async () => {
       const searchBars = () => new Promise.Reject(new Error())
-      return expect(requestBarData(searchBars, 'irvine')).to.be.rejectedWith(Error)
+      return expect(searchImplementer(searchBars, 'irvine')).to.be.rejectedWith(Error)
     })
     it('passes data to searchBars', async () => {
       let xArg
       const searchBars = (x) => { xArg = x }
-      await requestBarData(searchBars, 'irvine')
+      await searchImplementer(searchBars, 'irvine')
       expect(xArg).to.equal('irvine')
     })
   })

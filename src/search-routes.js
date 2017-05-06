@@ -24,12 +24,12 @@ const goingImplementer = async (add, barId, userId) => {
   }
 }
 
-const search = (searchBars, requestBarData) =>
+const search = (searchBars, searchImplementer) =>
   wrap(async ({ query: { location } }, res, next) => {
-    res.json(await requestBarData(searchBars, location))
+    res.json(await searchImplementer(searchBars, location))
   })
 
-const requestBarData = async (searchBars, location) => {
+const searchImplementer = async (searchBars, location) => {
   if (!location) throw new BadRequest('needs location')
   const result = await searchBars(location)
   return {
@@ -66,7 +66,7 @@ module.exports = (status) => {
 Object.assign(module.exports, {
   search,
   addNumberGoing,
-  requestBarData,
+  searchImplementer,
   mergeData,
   goingImplementer,
   going
