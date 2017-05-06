@@ -56,8 +56,22 @@ describe('status-factory', () => {
   })
 
   describe('add', () => {
-    it('adds entry to empty db')
-    it('updates existing entry in db')
+    it('adds entry to empty db', async () => {
+      await status.add('bar1', 5)
+      const {rows: [result]} = await db.query(`SELECT * FROM status WHERE id = 'bar1'`)
+      expect(result.id).to.equal('bar1')
+      expect(result.users_going).to.include(5)
+    })
+    it('updates existing entry in db', async () => {
+      await status.add('bar1', 5)
+      await status.add('bar1', 7)
+      await status.add('bar1', 298)
+      const {rows: [result]} = await db.query(`SELECT * FROM status WHERE id = 'bar1'`)
+      expect(result.id).to.equal('bar1')
+      expect(result.users_going).to.include(5)
+      expect(result.users_going).to.include(7)
+      expect(result.users_going).to.include(298)
+    })
     it('cannot add duplicate records')
   })
 
