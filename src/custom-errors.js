@@ -24,7 +24,10 @@ class InternalServerError extends CustomError {
 
 const errorHandler = (err, req, res, next) => {
   const error = err instanceof CustomError ? err : new InternalServerError()
-  res.status(error.statusCode).json(error)
+  res.status(error.statusCode).json({
+    success: false,
+    msg: error.message
+  })
 }
 
 const testError = (req, res, next) => {
