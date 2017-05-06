@@ -43,18 +43,14 @@ describe('search-routes', () => {
       expect(search()).to.be.a('function')
     })
     it('calls requestBarData with the right params', async () => {
-      let argA, argB
-      const requestBarData = (a, {location}) => {
-        argA = a
-        argB = location
-      }
+      const spy = sinon.spy()
       const setup = (req, res, next) => {
         req.query.location = 'irvine'
         next()
       }
-      await run(setup, search(requestBarData, {location: 'searchBars'}))
-      expect(argA).to.deep.equal({location: 'searchBars'})
-      expect(argB).to.equal('irvine')
+      await run(setup, search(spy, 'funcs'))
+      expect(spy.firstCall.args[0]).to.equal('funcs')
+      expect(spy.firstCall.args[1]).to.deep.equal({location: 'irvine'})
     })
   })
 
