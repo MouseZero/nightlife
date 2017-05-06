@@ -20,16 +20,16 @@ describe('search-routes', () => {
     })
     it('throws error if location is not passed in', () => {
       const searchBars = () => {}
-      return expect(searchImplementer(searchBars)).to.be.rejectedWith(BadRequest)
+      return expect(searchImplementer(searchBars, {})).to.be.rejectedWith(BadRequest)
     })
     it('throws error if searchBars fails', async () => {
       const searchBars = () => new Promise.Reject(new Error())
-      return expect(searchImplementer(searchBars, 'irvine')).to.be.rejectedWith(Error)
+      return expect(searchImplementer(searchBars, {location: 'irvine'})).to.be.rejectedWith(Error)
     })
     it('passes data to searchBars', async () => {
       let xArg
       const searchBars = (x) => { xArg = x }
-      await searchImplementer(searchBars, 'irvine')
+      await searchImplementer(searchBars, {location: 'irvine'})
       expect(xArg).to.equal('irvine')
     })
   })
@@ -43,16 +43,16 @@ describe('search-routes', () => {
     })
     it('calls requestBarData with the right params', async () => {
       let argA, argB
-      const requestBarData = (a, b) => {
+      const requestBarData = (a, {location}) => {
         argA = a
-        argB = b
+        argB = location
       }
       const setup = (req, res, next) => {
         req.query.location = 'irvine'
         next()
       }
-      await run(setup, search(requestBarData, 'searchBars'))
-      expect(argA).to.equal('searchBars')
+      await run(setup, search(requestBarData, {location: 'searchBars'}))
+      expect(argA).to.deep.equal({location: 'searchBars'})
       expect(argB).to.equal('irvine')
     })
   })

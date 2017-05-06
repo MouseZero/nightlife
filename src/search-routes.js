@@ -9,9 +9,9 @@ const going = (implementer, funcs) =>
     res.json(await implementer(funcs, {bar_id, id}))
   })
 
-const goingImplementer = async (add, { barId, userId }) => {
+const goingImplementer = async (add, { bar_id, id }) => {
   try {
-    await add(barId, userId)
+    await add(bar_id, id)
     return {
       success: true,
       msg: 'user added to location'
@@ -24,12 +24,12 @@ const goingImplementer = async (add, { barId, userId }) => {
   }
 }
 
-const search = (implementer, searchBars) =>
+const search = (implementer, funcs) =>
   wrap(async ({ query: { location } }, res, next) => {
-    res.json(await implementer(searchBars, location))
+    res.json(await implementer(funcs, {location}))
   })
 
-const searchImplementer = async (searchBars, location) => {
+const searchImplementer = async (searchBars, { location }) => {
   if (!location) throw new BadRequest('needs location')
   const result = await searchBars(location)
   return {
