@@ -85,12 +85,21 @@ describe('status-factory', () => {
 
   describe('update', () => {
     it('updates existing entry', async () => {
-      await db.query(`INSERT INTO status values ('some-id', ARRAY[2])`)
-      await status.update('some-id', 8)
-      const {rows: [result]} = await db.query(`SELECT * FROM status WHERE id = 'some-id'`)
+      await db.query(`INSERT INTO status values ('bar1', ARRAY[2])`)
+      await status.update('bar1', 8)
+      const {rows: [result]} = await db.query(`SELECT * FROM status WHERE id = 'bar1'`)
       expect(result.users_going).to.deep.equal([2, 8])
     })
-    it('throws error if user is already going to location')
+    it('throws error if user is already going to location', (done) => {
+      db.query(`INSERT INTO status values ('bar1', ARRAY[2, 5])`)
+        .then(() => {
+          return status.update('bar1', 5)
+        })
+        .then(() => {
+          done('should have thrown an error')
+        })
+        .catch(() => {done()})
+    })
   })
 
   describe('delUser', () => {
