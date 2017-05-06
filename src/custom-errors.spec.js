@@ -57,11 +57,12 @@ describe('custom-errors', () => {
             json: (x) => { tError = x }
           }
         }
-        next(new NotFound())
+        next(new NotFound('error text'))
       }
       await run(setup, errorHandler)
       expect(status).to.equal('404')
-      expect(tError.toJSON()).to.include.keys('statusCode', 'error', 'message')
+      expect(tError).to.include.keys('message')
+      expect(tError.message).to.equal('error text')
     })
   })
 
