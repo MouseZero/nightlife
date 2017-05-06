@@ -72,7 +72,15 @@ describe('status-factory', () => {
       expect(result.users_going).to.include(7)
       expect(result.users_going).to.include(298)
     })
-    it('cannot add duplicate records')
+    it('cannot add duplicate records', async () => {
+      await status.add('bar1', 5)
+      await status.add('bar1', 5)
+      await status.add('bar1', 9)
+      await status.add('bar1', 9)
+      await status.add('bar1', 9)
+      const {rows: [result]} = await db.query(`SELECT * FROM status WHERE id = 'bar1'`)
+      expect(result.users_going.length).to.equal(2)
+    })
   })
 
   describe('update', () => {
@@ -82,6 +90,7 @@ describe('status-factory', () => {
       const {rows: [result]} = await db.query(`SELECT * FROM status WHERE id = 'some-id'`)
       expect(result.users_going).to.deep.equal([2, 8])
     })
+    it('throws error if user is already going to location')
   })
 
   describe('delUser', () => {
