@@ -3,7 +3,8 @@ const {
   addNumberGoing,
   requestBarData,
   mergeData,
-  goingImplementer
+  goingImplementer,
+  going
 } = require('./search-routes')
 const run = require('express-unit')
 const { BadRequest } = require('./custom-errors')
@@ -85,7 +86,24 @@ describe('search-routes', () => {
   })
 
   describe('going', () => {
-    it('calls implementer with right arguments')
+    it('calls implementer with right arguments', async () => {
+      let passedAdd, barId, userId
+      const add = 'foo'
+      const implementer = (a, b, c) => {
+        passedAdd = a
+        barId = b
+        userId = c
+      }
+      const setup = (req, res, next) => {
+        req.body.bar_id = 'bar1'
+        req.body.user_id = 5
+        next()
+      }
+      await run(setup, going(implementer, add))
+      expect(passedAdd).to.equal(add)
+      expect(barId).to.equal('bar1')
+      expect(userId).to.equal(5)
+    })
     it('gets user from JWT not body')
   })
 

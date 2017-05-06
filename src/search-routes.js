@@ -68,5 +68,6 @@ Object.assign(module.exports, {
   addNumberGoing,
   requestBarData,
   mergeData,
-  goingImplementer
+  goingImplementer,
+  going
 })
