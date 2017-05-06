@@ -112,13 +112,13 @@ describe('search-routes', () => {
       const result = await goingImplementer(update, {})
       expect(result.success).to.equal(true)
     })
-    it('calls update with barId and users', async () => {
+    it('calls update with func and params', async () => {
       let barId, userId
-      const update = (a, b) => {
-        barId = a
-        userId = b
+      const add = (bar, id) => {
+        userId = id
+        barId = bar
       }
-      await goingImplementer(update, {barId: 'bar1', userId: 5})
+      await goingImplementer(add, {bar_id: 'bar1', id: 5})
       expect(barId).to.equal('bar1')
       expect(userId).to.equal(5)
     })
