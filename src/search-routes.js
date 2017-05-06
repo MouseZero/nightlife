@@ -4,12 +4,12 @@ const wrap = require('express-async-wrap')
 const { BadRequest } = require('./custom-errors')
 const _ = require('lodash')
 
-const going = (implementer, add) =>
+const going = (implementer, funcs) =>
   wrap(async ({body: { bar_id }, decoded: { id }}, res, next) => {
-    res.json(await implementer(add, bar_id, id))
+    res.json(await implementer(funcs, {bar_id, id}))
   })
 
-const goingImplementer = async (add, barId, userId) => {
+const goingImplementer = async (add, { barId, userId }) => {
   try {
     await add(barId, userId)
     return {
@@ -24,9 +24,9 @@ const goingImplementer = async (add, barId, userId) => {
   }
 }
 
-const search = (searchBars, searchImplementer) =>
+const search = (implementer, searchBars) =>
   wrap(async ({ query: { location } }, res, next) => {
-    res.json(await searchImplementer(searchBars, location))
+    res.json(await implementer(searchBars, location))
   })
 
 const searchImplementer = async (searchBars, location) => {
@@ -58,7 +58,7 @@ module.exports = (status) => {
   const router = new Router()
 
   router
-    .get('/', search(bars.search))
+    .get('/', search(searchImplementer, bars.search))
     .post('/', going(goingImplementer, status.add))
   return router
 }

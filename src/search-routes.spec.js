@@ -51,7 +51,7 @@ describe('search-routes', () => {
         req.query.location = 'irvine'
         next()
       }
-      await run(setup, search('searchBars', requestBarData))
+      await run(setup, search(requestBarData, 'searchBars'))
       expect(argA).to.equal('searchBars')
       expect(argB).to.equal('irvine')
     })
@@ -87,12 +87,12 @@ describe('search-routes', () => {
 
   describe('going', () => {
     it('calls implementer with right arguments', async () => {
-      let passedAdd, barId, userId
+      let passedAdd, bar, user
       const add = 'foo'
-      const implementer = (a, b, c) => {
+      const implementer = (a, params) => {
         passedAdd = a
-        barId = b
-        userId = c
+        bar = params['bar_id']
+        user = params['id']
       }
       const setup = (req, res, next) => {
         req.body.bar_id = 'bar1'
@@ -101,15 +101,15 @@ describe('search-routes', () => {
       }
       await run(setup, going(implementer, add))
       expect(passedAdd).to.equal(add)
-      expect(barId).to.equal('bar1')
-      expect(userId).to.equal(5)
+      expect(bar).to.equal('bar1')
+      expect(user).to.equal(5)
     })
   })
 
   describe('goingImplementer', () => {
     it('returns success for resolved update', async () => {
       const update = () => Promise.resolve()
-      const result = await goingImplementer(update)
+      const result = await goingImplementer(update, {})
       expect(result.success).to.equal(true)
     })
     it('calls update with barId and users', async () => {
@@ -118,13 +118,13 @@ describe('search-routes', () => {
         barId = a
         userId = b
       }
-      await goingImplementer(update, 'bar1', 5)
+      await goingImplementer(update, {barId: 'bar1', userId: 5})
       expect(barId).to.equal('bar1')
       expect(userId).to.equal(5)
     })
     it('reutrns success false for update reject promise', async () => {
       const update = () => Promise.reject(new Error())
-      const result = await goingImplementer(update)
+      const result = await goingImplementer(update, {})
       expect(result.success).to.equal(false)
     })
   })
