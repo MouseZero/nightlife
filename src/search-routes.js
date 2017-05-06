@@ -5,8 +5,8 @@ const { BadRequest } = require('./custom-errors')
 const _ = require('lodash')
 
 const going = (implementer, add) =>
-  wrap(async ({body: { bar_id, user_id }}, res, next) => {
-    res.json(await implementer(add, bar_id, user_id))
+  wrap(async ({body: { bar_id }, decoded: { id }}, res, next) => {
+    res.json(await implementer(add, bar_id, id))
   })
 
 const goingImplementer = async (add, barId, userId) => {

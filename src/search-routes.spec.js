@@ -96,7 +96,7 @@ describe('search-routes', () => {
       }
       const setup = (req, res, next) => {
         req.body.bar_id = 'bar1'
-        req.body.user_id = 5
+        req.decoded = {id: 5}
         next()
       }
       await run(setup, going(implementer, add))
@@ -104,7 +104,6 @@ describe('search-routes', () => {
       expect(barId).to.equal('bar1')
       expect(userId).to.equal(5)
     })
-    it('gets user from JWT not body')
   })
 
   describe('goingImplementer', () => {
