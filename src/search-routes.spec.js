@@ -7,6 +7,7 @@ const {
   going
 } = require('./search-routes')
 const run = require('express-unit')
+const sinon = require('sinon')
 const { BadRequest } = require('./custom-errors')
 const chai = require('chai')
 const chaiAsPromised = require('chai-as-promised')
@@ -113,14 +114,11 @@ describe('search-routes', () => {
       expect(result.success).to.equal(true)
     })
     it('calls update with func and params', async () => {
-      let barId, userId
-      const add = (bar, id) => {
-        userId = id
-        barId = bar
-      }
+      const add = sinon.spy()
       await goingImplementer(add, {bar_id: 'bar1', id: 5})
-      expect(barId).to.equal('bar1')
-      expect(userId).to.equal(5)
+      expect(add.firstCall.args[0]).to.equal('bar1')
+      expect(add.firstCall.args[1]).to.equal(5)
+      expect(add.callCount).to.equal(1)
     })
     it('reutrns success false for update reject promise', async () => {
       const update = () => Promise.reject(new Error())
