@@ -6,7 +6,7 @@ const { BadRequest } = require('./custom-errors')
 
 const authenticate = (getUser, secret, sign) => wrap(async (req, res, next) => {
   if (!req.body.user || !req.body.password) {
-    throw new BadRequest(`"user" and "password" are required`)
+    throw new BadRequest(`"user" and "password" are required. Please use x-www-form-urlencoded for data`)
   }
   const user = await getUser(req.body.user)
   if (!user) throw new BadRequest('User does not exist')
