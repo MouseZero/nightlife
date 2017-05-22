@@ -2,6 +2,7 @@ node_modules
 npm-debug.log
 config.js
 config.json
+startDocker.sh
 coverage
 .nyc_output
 sampleYelpData.json
