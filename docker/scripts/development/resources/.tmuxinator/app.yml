@@ -33,5 +33,5 @@ root: /node
 windows:
   - welcome:
   - git: git status
-  - npm: npm start
+  - npm: npm run nodemon
   - TDD: npm run TDD
