@@ -41,22 +41,6 @@ const searchImplementer = async (searchBars, { location }) => {
 const mapGoing = async function (businessesArray, lookupFunction) {
 }
 
-const mergeData = _.curry((objArray, dataLabel, dataArray) => {
-  return objArray.map((x, i) => {
-    return Object.assign({}, x, {
-      [dataLabel]: dataArray[i]
-    })
-  })
-})
-
-const addNumberGoing = _.curry((lookup, businesses) => {
-  return businesses.reduce((p, x) => {
-    const numberGoing = (lookup(x.id)) ? lookup(x.id) : 0
-    const newX = Object.assign({}, x, {numberGoing})
-    return [...p, newX]
-  }, [])
-})
-
 module.exports = (status) => {
   const router = new Router()
 
@@ -68,9 +52,7 @@ module.exports = (status) => {
 
 Object.assign(module.exports, {
   search,
-  addNumberGoing,
   searchImplementer,
-  mergeData,
   goingImplementer,
   going,
   mapGoing
