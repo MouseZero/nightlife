@@ -39,7 +39,17 @@ async (searchBars, { location }, formaterFunc = (x) => x) => {
   }
 }
 
-const mapGoing = async function (businessesArray, lookupFunction) {
+const mapGoing = async function (dataWithBusiness, lookupFunction) {
+  const newBusinessesArray = dataWithBusiness.businesses.map(e => {
+    return Object.assign({},
+    e,
+    {going: lookupFunction(e.id)}
+    )
+  })
+  return Object.assign({},
+    dataWithBusiness,
+    { businesses: newBusinessesArray }
+  )
 }
 
 module.exports = (status) => {

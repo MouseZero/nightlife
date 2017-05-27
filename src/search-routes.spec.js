@@ -184,6 +184,11 @@ describe('search-routes', () => {
     it('is an async function', () => {
       expect(mapGoing).to.be.an('AsyncFunction')
     })
-    it('should return data with an added goingStatus field')
+    it('should return data with an added goingStatus field', async () => {
+      const lookupFunction = () => 10
+      const result = await mapGoing(yelpApiExample, lookupFunction)
+      expect(result.businesses[0].going).to.equal(10)
+      expect(result.businesses[1].going).to.equal(10)
+    })
   })
 })
