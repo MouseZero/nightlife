@@ -120,6 +120,12 @@ describe('search-routes', () => {
       await searchImplementer(searchBars, {location: 'irvine'})
       expect(xArg).to.equal('irvine')
     })
+    it('formats data to the format function', async () => {
+      formaterFunc = (x) => { return { foo: 'bar' } }
+      const searchBars = () => yelpApiExample
+      const result = await searchImplementer(searchBars, {location: 'irvine'}, formaterFunc)
+      expect(result.result).to.deep.equal({foo: 'bar'})
+    })
   })
 
   describe('search', () => {
@@ -138,34 +144,6 @@ describe('search-routes', () => {
       await run(setup, search(spy, 'funcs'))
       expect(spy.firstCall.args[0]).to.equal('funcs')
       expect(spy.firstCall.args[1]).to.deep.equal({location: 'irvine'})
-    })
-  })
-
-  describe('mergeData', () => {
-    it('adds data to object', () => {
-      const objArray = [
-        {id: 'foo'},
-        {id: 'bar'},
-        {id: 'baz'}
-      ]
-      const dataArray = ['fooer', 'barer', 'bazer']
-      const newObj = mergeData(objArray, 'newStuff', dataArray)
-      expect(newObj[0]).to.deep.equal({id: 'foo', newStuff: 'fooer'})
-      expect(newObj[1]).to.deep.equal({id: 'bar', newStuff: 'barer'})
-      expect(newObj[2]).to.deep.equal({id: 'baz', newStuff: 'bazer'})
-    })
-    it('does not alter original', () => {
-      const objArray = [
-        {id: 'foo'},
-        {id: 'bar'},
-        {id: 'baz'}
-      ]
-      const objArrayCopy = objArray.map(x => Object.assign({}, x))
-      const dataArray = ['fooer', 'barer', 'bazer']
-      const dataArrayCopy = dataArray.slice()
-      mergeData(objArrayCopy, 'newStuff', dataArrayCopy)
-      expect(objArrayCopy).to.deep.equal(objArray)
-      expect(dataArrayCopy).to.deep.equal(dataArray)
     })
   })
 
@@ -199,22 +177,6 @@ describe('search-routes', () => {
       const update = () => Promise.reject(new Error())
       const result = await goingImplementer(update, {})
       expect(result.success).to.equal(false)
-    })
-  })
-
-  describe('addNumberGoing', () => {
-    it('should add "numberGoing" to data', () => {
-      const exampleData = [ { 'id': 'business1' }, { 'id': 'business2' } ]
-      const lookup = (id) => (id === 'business1') ? 6 : 5
-      const result = addNumberGoing(lookup)(exampleData)
-      expect(result[0].numberGoing).to.equal(6)
-      expect(result[1].numberGoing).to.equal(5)
-    })
-    it('returns zero if lookup returns null', () => {
-      const exampleData = [{ 'id': 'something' }]
-      const lookup = () => null
-      const result = addNumberGoing(lookup)(exampleData)
-      expect(result[0].numberGoing).to.equal(0)
     })
   })
 

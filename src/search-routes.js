@@ -29,9 +29,10 @@ const search = (implementer, funcs) =>
     res.json(await implementer(funcs, {location}))
   })
 
-const searchImplementer = async (searchBars, { location }) => {
+const searchImplementer = 
+async (searchBars, { location }, formaterFunc = (x) => x) => {
   if (!location) throw new BadRequest('needs location')
-  const result = await searchBars(location)
+  const result = formaterFunc(await searchBars(location))
   return {
     success: true,
     result
