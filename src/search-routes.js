@@ -24,9 +24,9 @@ const goingImplementer = async (add, { bar_id, id }) => {
   }
 }
 
-const search = (implementer, funcs) =>
+const search = (implementer, funcs, formaterFunc) =>
   wrap(async ({ query: { location } }, res, next) => {
-    res.json(await implementer(funcs, {location}))
+    res.json(await implementer(funcs, {location}, formaterFunc))
   })
 
 const searchImplementer = 
