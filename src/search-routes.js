@@ -39,24 +39,33 @@ async (searchBars, { location }, formaterFunc = (x) => x) => {
   }
 }
 
-const mapGoing = async function (dataWithBusiness, lookupFunction) {
-  const newBusinessesArray = dataWithBusiness.businesses.map(e => {
+const mapGoing = (lookupFunction) => 
+async (dataWithBusiness) => {
+  const newBusinessesArray = await Promise.all(dataWithBusiness.businesses.map(async e => {
+    const answer = await lookupFunction(e.id)
     return Object.assign({},
     e,
-    {going: lookupFunction(e.id)}
+    {users_going: answer}
     )
-  })
-  return Object.assign({},
+  }))
+  const newResult = Object.assign({},
     dataWithBusiness,
-    { businesses: newBusinessesArray }
-  )
+    { businesses: newBusinessesArray })
+  return newResult
+}
+
+const getStatusWrapper = (get) =>
+async (id) => {
+  const got = await get(id)
+  return (got && got['users_going']) ? got['users_going'].length : 0
 }
 
 module.exports = (status) => {
   const router = new Router()
+  const formatBusinessesForUsersGoing = mapGoing(getStatusWrapper(status.get))
 
   router
-    .get('/', search(searchImplementer, bars.search, status.get))
+    .get('/', search(searchImplementer, bars.search, formatBusinessesForUsersGoing))
     .post('/', going(goingImplementer, status.add))
   return router
 }
