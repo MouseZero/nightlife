@@ -54,7 +54,7 @@ async (dataWithBusiness) => {
   return newResult
 }
 
-const getStatusWrapper = (get) =>
+const numberOfUsersGoing = (get) =>
 async (id) => {
   const got = await get(id)
   return (got && got['users_going']) ? got['users_going'].length : 0
@@ -62,7 +62,7 @@ async (id) => {
 
 module.exports = (status) => {
   const router = new Router()
-  const formatBusinessesForUsersGoing = mapGoing(getStatusWrapper(status.get))
+  const formatBusinessesForUsersGoing = mapGoing(numberOfUsersGoing(status.get))
 
   router
     .get('/', search(searchImplementer, bars.search, formatBusinessesForUsersGoing))
