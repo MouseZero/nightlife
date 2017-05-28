@@ -1,8 +1,10 @@
 const { expect } = require('chai')
+const sinon = require('sinon')
 
 const {
   millisecondsTillTimeOfDay,
-  resetAtTime
+  setTimeoutTimeOfDay,
+  startIntervalsAtTime
 } = require('./reset-intervals')
 
 describe('reset-intervals', () => {
@@ -19,12 +21,44 @@ describe('reset-intervals', () => {
     })
   })
 
-  describe('resetAtTime', () => {
+  describe('setTimeoutTimeOfDay', () => {
     it('calls callback', (done) => {
       const func = () => done()
       const date = new Date(2017, 5, 28, 1, 59, 950)
-      resetAtTime(func, date, 2)
+      setTimeoutTimeOfDay(func, date, 2)
       setInterval(() => done(new Error('did no call function on time')), 300)
+    })
+  })
+
+  describe('startIntervalsAtTime', () => {
+    it('calls callback the first time when it should', (done) => {
+      
+      const spy = sinon.spy()
+      const date = new Date(2017, 5, 28, 1, 59, 950)
+      const oneDay = 86400000
+      startIntervalsAtTime(spy, date, 2, oneDay)
+      setTimeout(() => {
+        if (spy.callCount === 1) {
+          done()
+        } else {
+          done(new Error('expected spy to be called once not ' + spy.callCount))
+        }
+      }, 100)
+    })
+    it('calls callback the right number of times for intervals', (done) => {
+      const spy = sinon.spy()
+      const date = new Date(2017, 5, 28, 1, 59, 990)
+      const intervals = 20
+      startIntervalsAtTime(spy, date, 2, intervals)
+      setTimeout(() => {
+        const times = 5
+        if (spy.callCount === times) {
+          done()
+        } else {
+          done(new Error('expected spy to be called ' + times + ' times not ' + spy.callCount))
+        }
+      }, 100)
+
     })
   })
 })
