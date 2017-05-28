@@ -10,7 +10,11 @@ const getToken = (endpointInterface) => async () => {
     'client_id': app_id,
     'client_secret': app_secret
   }
-  return await endpointInterface(body, 'https://api.yelp.com/oauth2/token')
+  const result = await endpointInterface(body, 'https://api.yelp.com/oauth2/token')
+  if (result && result.error) {
+    console.log(result.error)
+  }
+  return result
 }
 
 const searchBars = (endpointInterface) => async (location, token) => {
@@ -18,7 +22,11 @@ const searchBars = (endpointInterface) => async (location, token) => {
     categories: 'bars',
     location
   }
-  return await endpointInterface(body, 'https://api.yelp.com/v3/businesses/search', token)
+  const result = await endpointInterface(body, 'https://api.yelp.com/v3/businesses/search', token)
+  if (result && result.error) {
+    console.log(result.error)
+  }
+  return result
 }
 
 module.exports = () => {
