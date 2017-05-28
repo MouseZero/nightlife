@@ -32,7 +32,6 @@ describe('reset-intervals', () => {
 
   describe('startIntervalsAtTime', () => {
     it('calls callback the first time when it should', (done) => {
-      
       const spy = sinon.spy()
       const date = new Date(2017, 5, 28, 1, 59, 950)
       const oneDay = 86400000
