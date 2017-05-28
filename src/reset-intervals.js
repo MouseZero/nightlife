@@ -27,11 +27,16 @@ const startIntervalsAtTime = (func, now, hourOfDay, intervalTime) => {
 }
 
 module.exports = (statusDB) => {
+  const resetStatus = () => {
+    statusDB.delUser()
+    console.log('cleared data at', new Date())
+  }
   const oneDay = 86400000
+  const hourToResetAt = 4
   startIntervalsAtTime(
-    statusDB.delUser,
+    resetStatus,
     new Date(),
-    4,
+    hourToResetAt,
     oneDay
   )
 }
