@@ -1,19 +1,18 @@
 const { Router } = require('express')
-const pg = require('pg')
-const { database: config } = require('../config.json')
-const pool = new pg.Pool(config)
-const usersDb = require('./persistence/users-factory')(pool)
-const statusDb = require('./persistence/status-factory')(pool)
 const userRoutes = require('./users-routes')
-const searchRoutes = require('./search-routes')(statusDb)
 const { errorHandler, testError } = require('./custom-errors')
-const { authenticate, mustHaveJWT } = require('./jwt-middleware')(usersDb)
+const searchRoutes = require('./search-routes')
+const jwtMiddleware = require('./jwt-middleware')
 
 const router = Router()
 module.exports = router
-  .use('/users', userRoutes(usersDb))
-  .post('/authenticate', authenticate)
-  .get('/testError', testError)
-  .use(mustHaveJWT)
-  .use('/search', searchRoutes)
-  .use(errorHandler)
+module.exports = (usersDb, statusDb) => {
+  const { authenticate, mustHaveJWT } = jwtMiddleware(usersDb)
+  return router
+    .use('/users', userRoutes(usersDb))
+    .post('/authenticate', authenticate)
+    .get('/testError', testError)
+    .use(mustHaveJWT)
+    .use('/search', searchRoutes(statusDb))
+    .use(errorHandler)
+}
