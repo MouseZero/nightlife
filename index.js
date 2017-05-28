@@ -15,7 +15,7 @@ app.use(bodyParser.json())
 
 app.use('/', routes(usersDb, statusDb))
 
-resetIntervals()
+resetIntervals(statusDb)
 
 app.listen(PORT, function () {
   console.log(`App is listening on port ${PORT}`)

@@ -34,4 +34,4 @@ windows:
   - welcome:
   - git: git status
   - npm: npm run nodemon
-  - TDD: npm run TDD
+  - TDD: npm run tdd
