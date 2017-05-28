@@ -32,7 +32,7 @@ const search = (implementer, funcs, formaterFunc) =>
 const searchImplementer = 
 async (searchBars, { location }, formaterFunc = (x) => x) => {
   if (!location) throw new BadRequest('needs location')
-  const result = formaterFunc(await searchBars(location))
+  const result = await formaterFunc(await searchBars(location))
   return {
     success: true,
     result
