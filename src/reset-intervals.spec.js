@@ -1,7 +1,8 @@
 const { expect } = require('chai')
 
 const {
-  millisecondsTillTimeOfDay
+  millisecondsTillTimeOfDay,
+  resetAtTime
 } = require('./reset-intervals')
 
 describe('reset-intervals', () => {
@@ -17,7 +18,13 @@ describe('reset-intervals', () => {
       expect(result).to.equal(48600000)
     })
   })
+
+  describe('resetAtTime', () => {
+    it('calls callback', (done) => {
+      const func = () => done()
+      const date = new Date(2017, 5, 28, 1, 59, 950)
+      resetAtTime(func, date, 2)
+      setInterval(() => done(new Error('did no call function on time')), 300)
+    })
+  })
 })
-
-
-// new Date(year, month[, date[, hours[, minutes[, seconds[, milliseconds]]]]]);

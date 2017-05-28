@@ -1,3 +1,6 @@
+const _ = require('lodash')
+
+// Core
 const millisecondsTillTimeOfDay = (hourOfDay, date) => {
   const offsetDate = new Date(
     date.getFullYear(), 
@@ -11,8 +14,9 @@ const millisecondsTillTimeOfDay = (hourOfDay, date) => {
   return offsetDate - date
 }
 
-const resetAtTime = (func, now, timeOfDay) => {
-}
+const resetAtTime = _.curry((func, now, hourOfDay) => {
+  setTimeout(func, millisecondsTillTimeOfDay(hourOfDay, now))
+})
 
 module.exports = (statusDB) => {
   console.log('called reset intervals')
@@ -22,11 +26,13 @@ module.exports = (statusDB) => {
 
 Object.assign(module.exports,
   {
-    millisecondsTillTimeOfDay
+    millisecondsTillTimeOfDay,
+    resetAtTime
   }
 )
 
 /*
+TODO
 Plan
 Set original reset based off of time of day
 that will call a new 24 hour interval
