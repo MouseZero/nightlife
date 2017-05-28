@@ -1,7 +1,7 @@
 const wrap = require('express-async-wrap')
 const { verify } = require('./util/jwtPromise')
 const { sign } = require('jsonwebtoken')
-const { secret } = require('../config.json')
+const secret = process.env.APP_SECRET
 const { BadRequest } = require('./custom-errors')
 
 const authenticate = (getUser, secret, sign) => wrap(async (req, res, next) => {

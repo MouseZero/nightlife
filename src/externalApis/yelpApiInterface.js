@@ -1,4 +1,5 @@
-const { yelp: { app_id, app_secret } } = require('../../config')
+const app_id = process.env.YELP_APP_ID
+const app_secret = process.env.YELP_APP_SECRET
 const fetch = require('node-fetch')
 const {
   xWwwFormUrlencodedFetch,

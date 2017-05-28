@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "nodemon": "nodemon index.js",
+    "devstart": "node bin/dev.js",
+    "nodemon": "nodemon bin/dev.js",
     "test": "find ./ -name '*.spec.js' | xargs mocha -R spec",
     "test:integ": "find ./ -name '*.integ.js' | xargs mocha -R spec",
     "tdd": "find ./ -name '*.spec.js' | xargs mocha -R min -w",
@@ -19,6 +20,7 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "1.17.1",
+    "dotenv": "4.0.0",
     "es6-error": "4.0.2",
     "express": "4.14.1",
     "express-async-wrap": "1.0.0",

@@ -3,9 +3,16 @@ const app = require('express')()
 const routes = require('./src/routes')
 const bodyParser = require('body-parser')
 const resetIntervals = require('./src/reset-intervals')
-//Database Setup
 const pg = require('pg')
-const { database: config } = require('./config.json')
+const config = {
+  user: process.env.DATABASE_USER,
+  password: process.env.DATABASE_PASSWORD,
+  database: process.env.DATABASE_DATABASE,
+  host: process.env.DATABASE_HOST,
+  port: process.env.DATABASE_PORT,
+  connectionNumber: parseInt(process.env.DATABASE_CONNECTION_NUMBER),
+  idleTimeoutMillis: parseInt(process.env.DATABASE_IDLE_TIMEOUT_MILLISECONDS)
+}
 const pool = new pg.Pool(config)
 const usersDb = require('./src/persistence/users-factory')(pool)
 const statusDb = require('./src/persistence/status-factory')(pool)

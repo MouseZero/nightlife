@@ -6,3 +6,5 @@ startDocker.sh
 coverage
 .nyc_output
 sampleYelpData.json
+.env
+core
