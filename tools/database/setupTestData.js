@@ -1,3 +1,4 @@
+require('dotenv/config')
 const pg = require('pg')
 const config = require('../../src/databaseCredentialsFromEnv')
 const db = new pg.Pool(config)
