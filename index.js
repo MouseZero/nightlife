@@ -1,4 +1,5 @@
 const PORT = process.env.PORT || process.argv[2] || 3000
+require('./src/checkEnvVars')()
 const app = require('express')()
 const routes = require('./src/routes')
 const bodyParser = require('body-parser')
