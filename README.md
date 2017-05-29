@@ -25,3 +25,18 @@ This will put you in the node container as `root`
 ``` bash
 npm run setupDocker
 ```
+
+### Non Docker Setup
+You will need to either create a `.env` file or you need to setup the following environment varables. You will have to change these variables to fit your requirements
+```
+APP_SECRET = replace-with-secret
+DATABASE_CONNECTION_NUMBER = 3
+DATABASE_DATABASE = app
+DATABASE_HOST = postgres
+DATABASE_IDLE_TIMEOUT_MILLISECONDS = 30000
+DATABASE_PASSWORD = password
+DATABASE_PORT = 5432
+DATABASE_USER = app
+YELP_APP_ID = testid
+YELP_APP_SECRET = testsecret
+```
