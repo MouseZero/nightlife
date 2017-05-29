@@ -1,5 +1,5 @@
 const pg = require('pg')
-const { database: config } = require('../../config.json')
+const config = require('./src/databaseCredentialsFromEnv')
 const db = new pg.Pool(config)
 
 const deleteTestUser = () => {
