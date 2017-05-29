@@ -15,6 +15,14 @@ services:
     tty: true
     environment:
       APP_ENV: ${APP_ENV}
+      APP_SECRET: dev-not-so-secret
+      DATABASE_CONNECTION_NUMBER: 3
+      DATABASE_DATABASE: app
+      DATABASE_HOST: postgres
+      DATABASE_IDLE_TIMEOUT_MILLISECONDS: 30000
+      DATABASE_PASSWORD: password
+      DATABASE_PORT: 5432
+      DATABASE_USER: app
     ports:
       - "3000:3000"
     volumes:

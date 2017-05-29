@@ -13,6 +13,13 @@ export APP_ENV=development
 docker-compose build
 docker-compose up -d
 ```
+you will need to create a .env file in the root directory and fill in varables to match your yelp account credentals
+
+example:
+```
+YELP_APP_ID = 65165121lkjlkjlk-8d
+YELP_APP_SECRET = lkmalikx51981elakmvklams56mlkamd56185151adskljfaslkdf
+```
 next we need to open the container
 ``` bash
 docker ps
