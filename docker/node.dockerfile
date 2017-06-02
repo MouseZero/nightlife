@@ -20,6 +20,6 @@ RUN chmod g+x ./docker/scripts/${type_env}/install.sh
 RUN ./docker/scripts/${type_env}/install.sh
 RUN npm install
 
-EXPOSE 3000
+EXPOSE 3033
 
 ENTRYPOINT ["npm", "start"]

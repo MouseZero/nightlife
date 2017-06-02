@@ -23,8 +23,9 @@ services:
       DATABASE_PASSWORD: password
       DATABASE_PORT: 5432
       DATABASE_USER: app
+      PORT: 3033
     ports:
-      - "3000:3000"
+      - "3033:3033"
     volumes:
       - .:/node
     networks:
