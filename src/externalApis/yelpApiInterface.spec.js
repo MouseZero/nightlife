@@ -61,7 +61,7 @@ describe('yelpApiInterface', () => {
       expect(tToken).to.equal('mytoken')
     })
     it('Errors when request fails', (done) => {
-      stub.callsFake(() => Promise.reject('error'))
+      stub.callsFake(() => Promise.reject(new Error('error')))
       searchBars(stub)()
         .then(() => done('Should have thrown an error'))
         .catch(() => done())
