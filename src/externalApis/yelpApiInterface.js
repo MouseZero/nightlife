@@ -1,15 +1,16 @@
-const app_id = process.env.YELP_APP_ID
-const app_secret = process.env.YELP_APP_SECRET
+const appID = process.env.YELP_APP_ID
+const appSecret = process.env.YELP_APP_SECRET
+
 const fetch = require('node-fetch')
 const {
   xWwwFormUrlencodedFetch,
   bearerTokenFetch
  } = require('./requestEndpoints')(fetch)
 
-const getToken = (endpointInterface) => async () => {
+const getToken = (endpointInterface, appID, appSecret) => async () => {
   const body = {
-    'client_id': app_id,
-    'client_secret': app_secret
+    'client_id': appID,
+    'client_secret': appSecret
   }
   const result = await endpointInterface(body, 'https://api.yelp.com/oauth2/token')
   if (result && result.error) {
@@ -32,7 +33,7 @@ const searchBars = (endpointInterface) => async (location, token) => {
 
 module.exports = () => {
   return {
-    getToken: getToken(xWwwFormUrlencodedFetch),
+    getToken: getToken(xWwwFormUrlencodedFetch, appID, appSecret),
     searchBars: searchBars(bearerTokenFetch)
   }
 }

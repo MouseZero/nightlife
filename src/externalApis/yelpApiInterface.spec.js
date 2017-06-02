@@ -23,7 +23,7 @@ describe('yelpApiInterface', () => {
         if (!!body['client_id'] && !!body['client_secret']) return done()
         done(new Error(`body doesn't have the right keys`))
       })
-      getToken(stub)()
+      getToken(stub, 'myAppId', 'myAppSecret')()
     })
 
     it(`uses https for its url`, (done) => {
