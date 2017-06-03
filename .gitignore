@@ -3,6 +3,7 @@ npm-debug.log
 config.js
 config.json
 startDocker.sh
+stopDocker.sh
 coverage
 .nyc_output
 sampleYelpData.json
