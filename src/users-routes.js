@@ -37,7 +37,8 @@ const userWithId = users => wrap(async ({ body: {id} }, res, next) => {
   next()
 })
 
-const remove = users => wrap(async ({ body: { id } }, res, next) => {
+const remove = users => wrap(async (req, res, next) => {
+  const id = req.decoded.id
   if (await users.remove(id)) {
     res.json({
       success: true,
@@ -80,7 +81,7 @@ module.exports = function usersRoutes (users) {
     .use(mustHaveJWT)
     .put('/', userWithId(users), update(users))
     .get('/:username', findOne(users))
-    .delete('/', userWithId(users), remove(users))
+    .delete('/', remove(users))
 
   return router
 }
