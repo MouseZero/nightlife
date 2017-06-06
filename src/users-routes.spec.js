@@ -194,7 +194,7 @@ describe('usersRoutes', () => {
 
     it('removes a user', async () => {
       const setup = (req, res, next) => {
-        req.body.id = 5
+        req.decoded = {id: 5}
         stub(users, 'remove').returns(Promise.resolve(1))
         res.json = json => { res.json = json }
         next()
@@ -207,7 +207,7 @@ describe('usersRoutes', () => {
 
     it('remove user that isn\'t there error', async () => {
       const setup = (req, res, next) => {
-        req.body.id = 5
+        req.decoded = {id: 5}
         stub(users, 'remove').returns(Promise.resolve(null))
         spy(res, 'status')
         next()
