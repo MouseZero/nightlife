@@ -24,28 +24,32 @@ const goingImplementer = async (add, { bar_id, id }) => {
   }
 }
 
-const search = (implementer, funcs, formaterFunc) =>
+const search = (implementer, funcs, formaterFuncs) =>
   wrap(async ({ query: { location } }, res, next) => {
-    res.json(await implementer(funcs, {location}, formaterFunc))
+    res.json(await implementer(funcs, {location}, formaterFuncs))
   })
 
 const searchImplementer =
-async (searchBars, { location }, formaterFunc = (x) => x) => {
+async (searchBars, { location }, formaterFuncs = (x) => x) => {
   if (!location) throw new BadRequest('needs location')
-  const result = await formaterFunc(await searchBars(location))
+  let result = await searchBars(location)
+  for (let i = 0; i < formaterFuncs.length; i++) {
+    result = await formaterFuncs[i](result)
+  }
   return {
     success: true,
     result
   }
 }
 
-const mapGoing = (lookupFunction) =>
+const mapBusinesses = (key, lookupFunction) =>
 async (dataWithBusiness) => {
-  const newBusinessesArray = await Promise.all(dataWithBusiness.businesses.map(async e => {
+  const newBusinessesArray =
+  await Promise.all(dataWithBusiness.businesses.map(async e => {
     const answer = await lookupFunction(e.id)
     return Object.assign({},
     e,
-    {users_going: answer}
+    {[key]: answer}
     )
   }))
   const newResult = Object.assign({},
@@ -53,6 +57,8 @@ async (dataWithBusiness) => {
     { businesses: newBusinessesArray })
   return newResult
 }
+
+const mapGoing = (lookupFunction) => mapBusinesses('users_going', lookupFunction)
 
 const numberOfUsersGoing = (get) =>
 async (id) => {
@@ -65,7 +71,7 @@ module.exports = (status) => {
   const formatBusinessesForUsersGoing = mapGoing(numberOfUsersGoing(status.get))
 
   router
-    .get('/', search(searchImplementer, bars.search, formatBusinessesForUsersGoing))
+    .get('/', search(searchImplementer, bars.search, [formatBusinessesForUsersGoing]))
     .post('/', going(goingImplementer, status.add))
   return router
 }
