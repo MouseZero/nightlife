@@ -29,7 +29,7 @@ const search = (implementer, funcs, formaterFunc) =>
     res.json(await implementer(funcs, {location}, formaterFunc))
   })
 
-const searchImplementer = 
+const searchImplementer =
 async (searchBars, { location }, formaterFunc = (x) => x) => {
   if (!location) throw new BadRequest('needs location')
   const result = await formaterFunc(await searchBars(location))
@@ -39,7 +39,7 @@ async (searchBars, { location }, formaterFunc = (x) => x) => {
   }
 }
 
-const mapGoing = (lookupFunction) => 
+const mapGoing = (lookupFunction) =>
 async (dataWithBusiness) => {
   const newBusinessesArray = await Promise.all(dataWithBusiness.businesses.map(async e => {
     const answer = await lookupFunction(e.id)
