@@ -107,10 +107,10 @@ describe('search-routes', () => {
       return expect(searchImplementer(searchBars, {location: 'irvine'}))
         .to.be.rejectedWith(Error)
     })
-    it.only('"your_going" and "users_going" get added to the data', async () => {
+    it('"your_going" and "users_going" get added to the data', async () => {
       const params = {}
       params.searchBars = () => Promise.resolve(yelpApiExample)
-      params.userId = {userId: 7}
+      params.userId = 7
       params.getStatus = sinon.stub()
       params.getStatus.onCall(0).returns({users_going: [1, 2, 4, 9]})
       params.getStatus.onCall(1).returns({users_going: [7]})
