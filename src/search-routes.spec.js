@@ -107,19 +107,14 @@ describe('search-routes', () => {
       return expect(searchImplementer(searchBars, {location: 'irvine'}))
         .to.be.rejectedWith(Error)
     })
-    it('"your_going" and "users_going" get added to the data', async () => {
-      const searchBars = () => Promise.resolve(yelpApiExample)
-      const inputs = {userId: 7}
-      const status = sinon.stub()
-      status.onCall(0).returns({users_going: [1, 2, 4, 9]})
-      status.onCall(1).returns({users_going: [7]})
-      const {result: {businesses}} = await searchImplementer(
-        searchBars,
-        inputs,
-        status
-      )
-      expect(businesses[0]['your_going']).to.equal(false)
-      expect(businesses[0]['users_going']).to.equal(4)
+    it.only('"your_going" and "users_going" get added to the data', async () => {
+      const params = {}
+      params.searchBars = () => Promise.resolve(yelpApiExample)
+      params.userId = {userId: 7}
+      params.getStatus = sinon.stub()
+      params.getStatus.onCall(0).returns({users_going: [1, 2, 4, 9]})
+      params.getStatus.onCall(1).returns({users_going: [7]})
+      const {result: {businesses}} = await searchImplementer(params)
       expect(businesses[1]['your_going']).to.equal(true)
       expect(businesses[1]['users_going']).to.equal(1)
     })
