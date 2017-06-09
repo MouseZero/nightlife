@@ -24,19 +24,19 @@ const goingImplementer = async (add, { bar_id, id }) => {
   }
 }
 
-const search = (implementer, search, getStatus) =>
+const search = (implementer, params) =>
   wrap(async (req, res, next) => {
-    const location = req.query.location
-    const userId = (req.decoded && req.decoded.id) ? req.decoded.id : ''
-    if (!location) throw new BadRequest('needs "location" in query')
-    if (!userId) throw new BadRequest('Needs a user ID, might need to login.')
-    res.json(await implementer(search, {location, userId}, getStatus))
+    params.location = req.query.location
+    params.userId = (req.decoded && req.decoded.id) ? req.decoded.id : ''
+    if (!params.location) throw new BadRequest('needs "location" in query')
+    if (!params.location) {
+      throw new BadRequest('Needs a user ID, might need to login.')
+    }
+    res.json(await implementer(params))
   })
 
 const searchImplementer = async (
-  searchBars,
-  { location, userId },
-  getStatus
+  { searchBars, location, userId, getStatus }
 ) => {
   let businessData = await searchBars(location)
   const businesses = businessData.businesses
@@ -84,7 +84,10 @@ module.exports = (status) => {
   const router = new Router()
 
   router
-    .get('/', search(searchImplementer, bars.search, status.get))
+    .get('/', search(searchImplementer, {
+      searchBars: bars.search,
+      getStatus: status.get
+    }))
     .post('/', going(goingImplementer, status.add))
   return router
 }
