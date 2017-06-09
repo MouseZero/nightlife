@@ -25,12 +25,14 @@ const goingImplementer = async (add, { bar_id, id }) => {
 }
 
 const search = (implementer, funcs, formaterFuncs) =>
-  wrap(async ({ query: { location } }, res, next) => {
-    res.json(await implementer(funcs, {location}, formaterFuncs))
+  wrap(async (req, res, next) => {
+    const location = req.query.location
+    const userId = req.decoded.id
+    res.json(await implementer(funcs, {location, userId}, formaterFuncs))
   })
 
 const searchImplementer =
-async (searchBars, { location }, formaterFuncs = (x) => x) => {
+async (searchBars, { location, userId }, formaterFuncs = (x) => x) => {
   if (!location) throw new BadRequest('needs location')
   let result = await searchBars(location)
   for (let i = 0; i < formaterFuncs.length; i++) {
@@ -42,11 +44,11 @@ async (searchBars, { location }, formaterFuncs = (x) => x) => {
   }
 }
 
-const mapBusinesses = (key, lookupFunction) =>
+const mapBusinesses = (key, calculateAnswer) =>
 async (dataWithBusiness) => {
   const newBusinessesArray =
   await Promise.all(dataWithBusiness.businesses.map(async e => {
-    const answer = await lookupFunction(e.id)
+    const answer = await calculateAnswer(e.id)
     return Object.assign({},
     e,
     {[key]: answer}
@@ -58,7 +60,8 @@ async (dataWithBusiness) => {
   return newResult
 }
 
-const mapGoing = (lookupFunction) => mapBusinesses('users_going', lookupFunction)
+const mapGoing = (calculateAnswerFunc) =>
+  mapBusinesses('users_going', calculateAnswerFunc)
 
 const numberOfUsersGoing = (get) =>
 async (id) => {
