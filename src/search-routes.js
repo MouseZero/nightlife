@@ -28,12 +28,13 @@ const search = (implementer, funcs, formaterFuncs) =>
   wrap(async (req, res, next) => {
     const location = req.query.location
     const userId = req.decoded.id
+    if (!location) throw new BadRequest('needs location')
+    if (!userId) throw new BadRequest('Needs a user ID, might need to login.')
     res.json(await implementer(funcs, {location, userId}, formaterFuncs))
   })
 
 const searchImplementer =
 async (searchBars, { location, userId }, formaterFuncs = (x) => x) => {
-  if (!location) throw new BadRequest('needs location')
   let result = await searchBars(location)
   for (let i = 0; i < formaterFuncs.length; i++) {
     result = await formaterFuncs[i](result)
