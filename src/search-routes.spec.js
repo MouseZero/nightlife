@@ -1,11 +1,8 @@
 const {
   search,
-  addNumberGoing,
   searchImplementer,
-  mergeData,
   goingImplementer,
-  going,
-  mapGoing
+  going
 } = require('./search-routes')
 const run = require('express-unit')
 const sinon = require('sinon')
@@ -100,31 +97,31 @@ const yelpApiExample = {
   ]
 }
 
-
 describe('search-routes', () => {
   describe('searchImplementer', () => {
     it('is Asyn Function', () => {
       expect(searchImplementer).to.be.a('AsyncFunction')
     })
-    it('throws error if location is not passed in', () => {
-      const searchBars = () => {}
-      return expect(searchImplementer(searchBars, {})).to.be.rejectedWith(BadRequest)
-    })
     it('throws error if searchBars fails', async () => {
       const searchBars = () => new Promise.Reject(new Error())
-      return expect(searchImplementer(searchBars, {location: 'irvine'})).to.be.rejectedWith(Error)
+      return expect(searchImplementer(searchBars, {location: 'irvine'}))
+        .to.be.rejectedWith(Error)
     })
-    it('passes data to searchBars', async () => {
-      let xArg
-      const searchBars = (x) => { xArg = x }
-      await searchImplementer(searchBars, {location: 'irvine'})
-      expect(xArg).to.equal('irvine')
-    })
-    it('formats data to the format function', async () => {
-      formaterFunc = (x) => { return { foo: 'bar' } }
-      const searchBars = () => yelpApiExample
-      const result = await searchImplementer(searchBars, {location: 'irvine'}, formaterFunc)
-      expect(result.result).to.deep.equal({foo: 'bar'})
+    it('"your_going" and "users_going" get added to the data', async () => {
+      const searchBars = () => Promise.resolve(yelpApiExample)
+      const inputs = {userId: 7}
+      const status = sinon.stub()
+      status.onCall(0).returns({users_going: [1, 2, 4, 9]})
+      status.onCall(1).returns({users_going: [7]})
+      const {result: {businesses}} = await searchImplementer(
+        searchBars,
+        inputs,
+        status
+      )
+      expect(businesses[0]['your_going']).to.equal(false)
+      expect(businesses[0]['users_going']).to.equal(4)
+      expect(businesses[1]['your_going']).to.equal(true)
+      expect(businesses[1]['users_going']).to.equal(1)
     })
   })
 
@@ -135,15 +132,23 @@ describe('search-routes', () => {
     it('should return a function', () => {
       expect(search()).to.be.a('function')
     })
-    it('calls requestBarData with the right params', async () => {
-      const spy = sinon.spy()
+    it('errors when location not in query', async () => {
+      const func = () => {}
+      const setup = (req, res, next) => {
+        req.decoded = { id: 7 }
+        next()
+      }
+      const [error] = await run(setup, search(func, '', func))
+      expect(error).to.be.instanceof(BadRequest)
+    })
+    it('errors when id not in decoded', async () => {
+      const func = () => {}
       const setup = (req, res, next) => {
         req.query.location = 'irvine'
         next()
       }
-      await run(setup, search(spy, 'funcs'))
-      expect(spy.firstCall.args[0]).to.equal('funcs')
-      expect(spy.firstCall.args[1]).to.deep.equal({location: 'irvine'})
+      const [error] = await run(setup, search(func, '', func))
+      expect(error).to.be.instanceof(BadRequest)
     })
   })
 
@@ -177,18 +182,6 @@ describe('search-routes', () => {
       const update = () => Promise.reject(new Error())
       const result = await goingImplementer(update, {})
       expect(result.success).to.equal(false)
-    })
-  })
-
-  describe('mapGoing', () => {
-    it('is an async function', () => {
-      expect(mapGoing()).to.be.an('AsyncFunction')
-    })
-    it('should return data with an added goingStatus field', async () => {
-      const lookupFunction = () => 10
-      const result = await mapGoing(lookupFunction)(yelpApiExample)
-      expect(result.businesses[0].users_going).to.equal(10)
-      expect(result.businesses[1].users_going).to.equal(10)
     })
   })
 })

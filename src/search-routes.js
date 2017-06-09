@@ -27,14 +27,17 @@ const goingImplementer = async (add, { bar_id, id }) => {
 const search = (implementer, search, getStatus) =>
   wrap(async (req, res, next) => {
     const location = req.query.location
-    const userId = req.decoded.id
-    if (!location) throw new BadRequest('needs location')
+    const userId = (req.decoded && req.decoded.id) ? req.decoded.id : ''
+    if (!location) throw new BadRequest('needs "location" in query')
     if (!userId) throw new BadRequest('Needs a user ID, might need to login.')
     res.json(await implementer(search, {location, userId}, getStatus))
   })
 
-const searchImplementer =
-async (searchBars, { location, userId }, getStatus) => {
+const searchImplementer = async (
+  searchBars,
+  { location, userId },
+  getStatus
+) => {
   let businessData = await searchBars(location)
   const businesses = businessData.businesses
   const status = await Promise.all(
