@@ -9,14 +9,17 @@ const going = (implementer, params) =>
     res.json(await implementer(Object.assign({}, params, {bar_id, id})))
   })
 
+const isAlreadyGoing = async (get, barId, id) => {
+  const goingObject = await get(barId)
+  const going = (goingObject && goingObject['users_going'])
+    ? goingObject['users_going']
+    : []
+  return (going.indexOf(id) !== -1)
+}
+
 const goingToggleImplementer = async ({ get, add, delUser, bar_id, id }) => {
   try {
-    const goingObject = await get(bar_id)
-    const going = (goingObject && goingObject['users_going'])
-      ? goingObject['users_going']
-      : []
-    const isAlreadyGoing = (going.indexOf(id) !== -1)
-    if (isAlreadyGoing) {
+    if (await isAlreadyGoing(get, bar_id, id)) {
       delUser(bar_id, id)
     } else {
       add(bar_id, id)

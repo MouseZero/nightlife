@@ -181,6 +181,7 @@ describe('search-routes', () => {
         },
         delUser: sinon.spy(),
         add: sinon.spy(),
+        bar_id: 'bar1',
         id: 20
       }
 
@@ -199,6 +200,7 @@ describe('search-routes', () => {
         },
         delUser: sinon.spy(),
         add: sinon.spy(),
+        bar_id: 'bar1',
         id: 3
       }
 
@@ -211,6 +213,7 @@ describe('search-routes', () => {
     it('when get throws error should return success false', async () => {
       const params = {
         get: () => Promise.reject(new Error('error')),
+        bar_id: 'bar1',
         id: 20
       }
 
