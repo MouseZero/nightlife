@@ -21,12 +21,12 @@ const goingToggleImplementer = async ({ get, add, delUser, bar_id, id }) => {
     } else {
       add(bar_id, id)
     }
+    const newStatus = (isAlreadyGoing) ? 'Not Going' : 'Going'
     return {
       success: true,
-      msg: 'endpoint not implemented yet'
+      msg: 'Changed your status to ' + newStatus
     }
   } catch (err) {
-    console.log(err)
     return {
       success: false,
       msg: 'unable to toggle going'
