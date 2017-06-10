@@ -109,5 +109,6 @@ module.exports = (status) => {
 Object.assign(module.exports, {
   search,
   searchImplementer,
+  goingToggleImplementer,
   going
 })

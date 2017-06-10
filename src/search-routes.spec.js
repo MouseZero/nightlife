@@ -172,7 +172,51 @@ describe('search-routes', () => {
   })
 
   describe('goingToggleImplementer', () => {
-    it('when already going changes to not going')
-    it('when not going changes to going')
+    it('when already going changes to not going', async () => {
+      const params = {
+        get: () => {
+          return {
+            'users_going': [5, 7, 20]
+          }
+        },
+        delUser: sinon.spy(),
+        add: sinon.spy(),
+        id: 20
+      }
+
+      const result = await goingToggleImplementer(params)
+      
+      expect(params.delUser.called).to.equal(true)
+      expect(params.add.called).to.equal(false)
+      expect(result.success).to.equal(true)
+    })
+    it('when not going changes to going', async () => {
+      const params = {
+        get: () => {
+          return {
+            'users_going': [5, 7, 20]
+          }
+        },
+        delUser: sinon.spy(),
+        add: sinon.spy(),
+        id: 3
+      }
+
+      const result = await goingToggleImplementer(params)
+
+      expect(params.delUser.called).to.equal(false)
+      expect(params.add.called).to.equal(true)
+      expect(result.success).to.equal(true)
+    })
+    it('when get throws error should return success false', async () => {
+      const params = {
+        get: () => Promise.reject(new Error('error')),
+        id: 20
+      }
+
+      const result = await goingToggleImplementer(params)
+
+      expect(result.success).to.equal(false)
+    })
   })
 })
