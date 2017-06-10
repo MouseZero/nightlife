@@ -1,7 +1,7 @@
 const {
   search,
   searchImplementer,
-  goingImplementer,
+  goingToggleImplementer,
   going
 } = require('./search-routes')
 const run = require('express-unit')
@@ -155,28 +155,24 @@ describe('search-routes', () => {
         next()
       }
       const spy = sinon.spy()
-      await run(setup, going(spy, 'foo'))
-      expect(spy.calledWith('foo', {id: 5, bar_id: 'bar1'})).to.equal(true)
+      await run(setup, going(spy, {
+        add: true,
+        delUser: true,
+        get: true
+      }))
+      expect(spy.calledWith({
+        id: 5,
+        bar_id: 'bar1',
+        add: true,
+        delUser: true,
+        get: true
+      })).to.equal(true)
       expect(spy.callCount).to.equal(1)
     })
   })
 
-  describe('goingImplementer', () => {
-    it('returns success for resolved update', async () => {
-      const update = () => Promise.resolve()
-      const result = await goingImplementer(update, {})
-      expect(result.success).to.equal(true)
-    })
-    it('calls update with func and params', async () => {
-      const add = sinon.spy()
-      await goingImplementer(add, {bar_id: 'bar1', id: 5})
-      expect(add.calledWith('bar1', 5)).to.equal(true)
-      expect(add.callCount).to.equal(1)
-    })
-    it('reutrns success false for update reject promise', async () => {
-      const update = () => Promise.reject(new Error())
-      const result = await goingImplementer(update, {})
-      expect(result.success).to.equal(false)
-    })
+  describe('goingToggleImplementer', () => {
+    it('when already going changes to not going')
+    it('when not going changes to going')
   })
 })
