@@ -4,36 +4,46 @@ const wrap = require('express-async-wrap')
 const { BadRequest } = require('./custom-errors')
 const _ = require('lodash')
 
-const going = (implementer, funcs) =>
+const going = (implementer, params) =>
   wrap(async ({body: { bar_id }, decoded: { id }}, res, next) => {
-    res.json(await implementer(funcs, {bar_id, id}))
+    res.json(await implementer(Object.assign({}, params, {bar_id, id})))
   })
 
-const goingImplementer = async (add, { bar_id, id }) => {
+const goingToggleImplementer = async ({ get, add, delUser, bar_id, id }) => {
   try {
-    await add(bar_id, id)
+    const goingObject = await get(bar_id)
+    const going = (goingObject && goingObject['users_going'])
+      ? goingObject['users_going']
+      : []
+    const isAlreadyGoing = (going.indexOf(id) !== -1)
+    if (isAlreadyGoing) {
+      delUser(bar_id, id)
+    } else {
+      add(bar_id, id)
+    }
     return {
       success: true,
-      msg: 'user added to location'
+      msg: 'endpoint not implemented yet'
     }
   } catch (err) {
+    console.log(err)
     return {
       success: false,
-      msg: 'could not add user to location'
+      msg: 'unable to toggle going'
     }
   }
 }
 
 const search = (implementer, params) =>
-  wrap(async (req, res, next) => {
-    params.location = req.query.location
-    params.userId = (req.decoded && req.decoded.id) ? req.decoded.id : ''
-    if (!params.location) throw new BadRequest('needs "location" in query')
-    if (!params.location) {
-      throw new BadRequest('Needs a user ID, might need to login.')
-    }
-    res.json(await implementer(params))
-  })
+wrap(async (req, res, next) => {
+  params.location = req.query.location
+  params.userId = (req.decoded && req.decoded.id) ? req.decoded.id : ''
+  if (!params.location) throw new BadRequest('needs "location" in query')
+  if (!params.location) {
+    throw new BadRequest('Needs a user ID, might need to login.')
+  }
+  res.json(await implementer(params))
+})
 
 const searchImplementer = async (
   { searchBars, location, userId, getStatus }
@@ -88,13 +98,16 @@ module.exports = (status) => {
       searchBars: bars.search,
       getStatus: status.get
     }))
-    .post('/', going(goingImplementer, status.add))
+    .post('/', going(goingToggleImplementer, {
+      add: status.add,
+      delUser: status.delUser,
+      get: status.get
+    }))
   return router
 }
 
 Object.assign(module.exports, {
   search,
   searchImplementer,
-  goingImplementer,
   going
 })
