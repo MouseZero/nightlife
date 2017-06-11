@@ -39,13 +39,10 @@ const goingToggleImplementer = async ({ get, add, delUser, bar_id, id }) => {
 
 const search = (implementer, params, tokenToUserName) =>
 wrap(async (req, res, next) => {
+  params.location = req.query.location
+  if (!params.location) throw new BadRequest('needs "location" in query')
   try {
-    params.location = req.query.location
     params.userId = await tokenToUserName(req.headers['x-access-token'])
-    if (!params.location) throw new BadRequest('needs "location" in query')
-    if (!params.location) {
-      throw new BadRequest('Needs a user ID, might need to login.')
-    }
   } catch (error) {
     console.log(error)
   }

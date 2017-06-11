@@ -136,15 +136,6 @@ describe('search-routes', () => {
       const [error] = await run(setup, search(func, '', func))
       expect(error).to.be.instanceof(BadRequest)
     })
-    it('errors when id not in decoded', async () => {
-      const func = () => {}
-      const setup = (req, res, next) => {
-        req.query.location = 'irvine'
-        next()
-      }
-      const [error] = await run(setup, search(func, '', func))
-      expect(error).to.be.instanceof(BadRequest)
-    })
   })
 
   describe('going', () => {
