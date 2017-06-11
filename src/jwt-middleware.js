@@ -20,6 +20,12 @@ const authenticate = (getUser, secret, sign) => wrap(async (req, res, next) => {
   })
 })
 
+const tokenToUserName = async (token) => {
+  if (!token) return ''
+  const { id } = await verify(token, secret)
+  return id
+}
+
 const mustHaveJWT = (verify, secret) => wrap(async (req, res, next) => {
   let token = req.body.token || req.query.token || req.headers['x-access-token']
   if (!token) return next(new BadRequest('You need to have a token for access'))
@@ -30,12 +36,14 @@ const mustHaveJWT = (verify, secret) => wrap(async (req, res, next) => {
 module.exports = (users) => {
   return {
     mustHaveJWT: mustHaveJWT(verify, secret),
-    authenticate: authenticate(users.get, secret, sign)
+    authenticate: authenticate(users.get, secret, sign),
+    tokenToUserName
   }
 }
 Object.assign(module.exports,
   {
     authenticate,
-    mustHaveJWT
+    mustHaveJWT,
+    tokenToUserName
   }
 )

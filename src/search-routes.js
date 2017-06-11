@@ -37,13 +37,17 @@ const goingToggleImplementer = async ({ get, add, delUser, bar_id, id }) => {
   }
 }
 
-const search = (implementer, params) =>
+const search = (implementer, params, tokenToUserName) =>
 wrap(async (req, res, next) => {
-  params.location = req.query.location
-  params.userId = (req.decoded && req.decoded.id) ? req.decoded.id : ''
-  if (!params.location) throw new BadRequest('needs "location" in query')
-  if (!params.location) {
-    throw new BadRequest('Needs a user ID, might need to login.')
+  try {
+    params.location = req.query.location
+    params.userId = await tokenToUserName(req.headers['x-access-token'])
+    if (!params.location) throw new BadRequest('needs "location" in query')
+    if (!params.location) {
+      throw new BadRequest('Needs a user ID, might need to login.')
+    }
+  } catch (error) {
+    console.log(error)
   }
   res.json(await implementer(params))
 })
@@ -95,13 +99,17 @@ function addYourGoing (userStatus, userId, original) {
 
 module.exports = (status, userDb) => {
   const router = new Router()
-  const { mustHaveJWT } = require('./jwt-middleware')(userDb)
+  const { mustHaveJWT, tokenToUserName } = require('./jwt-middleware')(userDb)
 
   router
-    .get('/', search(searchImplementer, {
-      searchBars: bars.search,
-      getStatus: status.get
-    }))
+    .get('/', search(
+      searchImplementer,
+      {
+        searchBars: bars.search,
+        getStatus: status.get
+      },
+      tokenToUserName
+    ))
     .use(mustHaveJWT)
     .post('/', going(goingToggleImplementer, {
       add: status.add,
