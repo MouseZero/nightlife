@@ -7,12 +7,11 @@ const jwtMiddleware = require('./jwt-middleware')
 const router = Router()
 module.exports = router
 module.exports = (usersDb, statusDb) => {
-  const { authenticate, mustHaveJWT } = jwtMiddleware(usersDb)
+  const { authenticate } = jwtMiddleware(usersDb)
   return router
     .use('/users', userRoutes(usersDb))
     .post('/authenticate', authenticate)
     .get('/testError', testError)
-    .use(mustHaveJWT)
-    .use('/search', searchRoutes(statusDb))
+    .use('/search', searchRoutes(statusDb, usersDb))
     .use(errorHandler)
 }

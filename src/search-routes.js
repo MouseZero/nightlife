@@ -93,14 +93,16 @@ function addYourGoing (userStatus, userId, original) {
   )
 }
 
-module.exports = (status) => {
+module.exports = (status, userDb) => {
   const router = new Router()
+  const { mustHaveJWT } = require('./jwt-middleware')(userDb)
 
   router
     .get('/', search(searchImplementer, {
       searchBars: bars.search,
       getStatus: status.get
     }))
+    .use(mustHaveJWT)
     .post('/', going(goingToggleImplementer, {
       add: status.add,
       delUser: status.delUser,
