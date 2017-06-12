@@ -45,5 +45,4 @@ describe('reset-intervals', () => {
     assert(!resetAll.called, 'should not call resetAll')
     assert(!setResetTime.called, 'should not call setResetTime')
   })
-  it('should do something with errors')
 })

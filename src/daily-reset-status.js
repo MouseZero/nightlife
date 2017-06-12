@@ -10,8 +10,13 @@ async function dailyResetStatus (
   timeOfDay
 ) {
   if (currentDate.getTime() >= getResetTime().getTime()) {
-    await resetAllStatus()
-    await setResetTime(nextDayAt(timeOfDay, currentDate))
+    try {
+      await resetAllStatus()
+      await setResetTime(nextDayAt(timeOfDay, currentDate))
+    } catch (error) {
+      // TODO replace with real logging
+      console.log(error)
+    }
   }
 }
 
