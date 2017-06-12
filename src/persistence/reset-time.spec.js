@@ -76,7 +76,7 @@ describe('reset-time', () => {
         ("name-id", "next-reset-time")
         VALUES
         ('reset-time', $1);
-      `, [testTime.toISOString()])
+      `, [testTime])
 
       const result = await resetTime.get()
 

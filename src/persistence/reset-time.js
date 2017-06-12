@@ -11,7 +11,7 @@ module.exports = (db) => {
     ("name-id", "next-reset-time")
     VALUES
     ($1, $2)
-    `, [id, time.toISOString()])
+    `, [id, time])
     return result
   }
 
