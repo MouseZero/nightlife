@@ -31,7 +31,7 @@ describe('reset-time', () => {
         VALUES
         ('reset-time', $1)
       `, [oldDate])
-      const testDate = new Date()
+      const testDate = new Date(2017, 5, 10, 9, 45, 34, 9)
 
       await resetTime.set(testDate)
 
@@ -48,7 +48,7 @@ describe('reset-time', () => {
         DELETE FROM "reset-time"
         WHERE "name-id" = 'reset-time';
       `)
-      const testDate = new Date()
+      const testDate = new Date(2017, 5, 10, 10, 32, 76, 39)
 
       await resetTime.set(testDate)
 
