@@ -43,14 +43,16 @@ const createStatusTable = () => {
 
 const createResetClockTable = () => {
   return db.query(`
-    CREATE TABLE public."reset-clock"
+    CREATE TABLE public."reset-time"
     (
-      "next-reset-time" timestamp without time zone
+      "name-id" character varying(100) NOT NULL,
+      "next-reset-time" timestamp with time zone,
+      CONSTRAINT "id-key" PRIMARY KEY ("name-id")
     )
     WITH (
       OIDS=FALSE
     );
-    ALTER TABLE public."reset-clock"
+    ALTER TABLE public."reset-time"
       OWNER TO ${config.user};
     `)
   .then(() => { console.log('Created status table') })
