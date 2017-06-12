@@ -61,4 +61,27 @@ describe('reset-time', () => {
       expect(testDate.toISOString()).to.equal(newDate.toISOString())
     })
   })
+  describe('get', () => {
+    it('is an async function', () => {
+      expect(resetTime.get).to.be.an('AsyncFunction')
+    })
+    it('gets the last time that was set', async () => {
+      await db.query(`
+        DELETE FROM "reset-time"
+        WHERE "name-id" = 'reset-time';
+      `)
+      const testTime = new Date(2017, 5, 10, 3, 55, 4)
+      await db.query(`
+        INSERT INTO "reset-time"
+        ("name-id", "next-reset-time")
+        VALUES
+        ('reset-time', $1);
+      `, [testTime.toISOString()])
+
+      const result = await resetTime.get()
+
+      expect(result).to.be.a('Date')
+      expect(result.toISOString()).to.equal(testTime.toISOString())
+    })
+  })
 })
