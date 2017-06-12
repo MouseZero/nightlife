@@ -15,12 +15,15 @@ module.exports = (db) => {
     return result
   }
 
+  function nextTimeValue (row) {
+    return row[0]['next-reset-time']
+  }
+
   async function get (id = 'reset-time') {
     const { rows } = await db.query(`
       SELECT * FROM "reset-time"
       WHERE "name-id" = $1;
     `, [id])
-    const result = rows[0]['next-reset-time']
-    return new Date(result)
+    return new Date(nextTimeValue(rows))
   }
 }
