@@ -41,7 +41,22 @@ const createStatusTable = () => {
   .then(() => { console.log('Created status table') })
 }
 
-Promise.all([createUserTable(), createStatusTable()])
+const createResetClockTable = () => {
+  return db.query(`
+    CREATE TABLE public."reset-clock"
+    (
+      "next-reset-time" timestamp without time zone
+    )
+    WITH (
+      OIDS=FALSE
+    );
+    ALTER TABLE public."reset-clock"
+      OWNER TO ${config.user};
+    `)
+  .then(() => { console.log('Created status table') })
+}
+
+Promise.all([createUserTable(), createStatusTable(), createResetClockTable()])
   .then(() => {
     console.log('All tables are created')
     process.exit()
