@@ -1,7 +1,7 @@
 const { expect } = require('chai')
 const usersFactory = require('./users-factory')
 const { Pool } = require('pg')
-const { database: config } = require('../../config.json')
+const config = require('../databaseCredentialsFromEnv')
 
 describe('UserFactory', function () {
   const db = new Pool(config)

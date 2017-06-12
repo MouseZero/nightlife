@@ -1,7 +1,7 @@
 const statusFactory = require('./status-factory')
 const { expect } = require('chai')
 const { Pool } = require('pg')
-const { database: config } = require('../../config.json')
+const config = require('../databaseCredentialsFromEnv')
 
 describe('status-factory', () => {
   const db = new Pool(config)
