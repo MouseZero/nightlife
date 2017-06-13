@@ -15,7 +15,7 @@ describe('yelpApiInterface', () => {
 
   describe('searchBars', () => {
     it('Returns information about bars', async function () {
-      this.timeout('10000')
+      this.timeout('30000')
       const result = await searchBars('irvine', realToken)
       expect(!!result.businesses).to.equal(true)
     })
