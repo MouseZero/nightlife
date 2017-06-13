@@ -1,4 +1,4 @@
-const dailyResetStatus = require('./daily-reset-status')
+const dailyResetStatus = require('./daily-reset-status').Orchestrator
 const assert = require('assert')
 const sinon = require('sinon')
 

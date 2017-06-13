@@ -1,9 +1,27 @@
-// How would you go about figuring out if the status data needs a reset
+/*
+TODO create another export that only takes a optional database
+and doesn't take any more arguments. Have a built in pool that
+passes down to the 2 other classes that need DB pools
+*/
+const pg = require('pg')
+const config = require('./databaseCredentialsFromEnv')
+const pool = new pg.Pool(config)
+const Status = require('./persistence/status-factory')
+const ResetTime = require('./persistence/reset-time')
 
-// What we have
-// [lastUpdate, timeOfDayToRestart, currentDate]
+async function dailyResetStatus (db = pool, timeOfDay = 5) {
+  const status = Status(db)
+  const resetTime = ResetTime(db)
+  const currentDate = new Date()
+  dailyResetStatusOrchestrater(
+    currentDate,
+    resetTime,
+    status.delAll,
+    timeOfDay
+  )
+}
 
-async function dailyResetStatus (
+async function dailyResetStatusOrchestrater (
   currentDate,
   { get, set },
   resetAllStatus,
@@ -31,3 +49,6 @@ function nextDayAt (timeOfDay, currentDate) {
 }
 
 module.exports = dailyResetStatus
+Object.assign(module.exports, {
+  Orchestrator: dailyResetStatusOrchestrater
+})
