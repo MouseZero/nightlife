@@ -1,3 +1,4 @@
+require('dotenv/config')
 const { getToken, searchBars } = require('./yelpApiInterface')()
 const { expect } = require('chai')
 let realToken
@@ -13,7 +14,8 @@ describe('yelpApiInterface', () => {
   })
 
   describe('searchBars', () => {
-    it('Returns information about bars', async () => {
+    it('Returns information about bars', async function () {
+      this.timeout('10000')
       const result = await searchBars('irvine', realToken)
       expect(!!result.businesses).to.equal(true)
     })
