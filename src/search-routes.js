@@ -53,8 +53,7 @@ wrap(async (req, res, next) => {
 const searchImplementer = async (
   { searchBars, location, userId, getStatus, dailyResetStatus }
 ) => {
-  // Todo Fix this
-  'dailyResetStatus' in arguments[0] && await dailyResetStatus()
+  dailyResetStatus && await dailyResetStatus()
   let businessData = await searchBars(location)
   const businesses = businessData.businesses
   const status = await Promise.all(

@@ -15,8 +15,9 @@ module.exports = (db) => {
     return result
   }
 
-  function nextTimeValue (row) {
-    return row[0]['next-reset-time']
+  function nextTimeValue (rows) {
+    if (rows.length <= 0) return null
+    return rows[0]['next-reset-time']
   }
 
   async function get (id = 'reset-time') {

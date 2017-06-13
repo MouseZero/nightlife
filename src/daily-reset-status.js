@@ -27,15 +27,18 @@ async function dailyResetStatusOrchestrater (
   resetAllStatus,
   timeOfDayUTC
 ) {
-  if (currentDate.getTime() >= (await get()).getTime()) {
-    try {
+  try {
+    const nextResetTime = await get()
+    if (!nextResetTime) await set(nextDayAt(timeOfDayUTC, currentDate))
+    if (currentDate.getTime() >= nextResetTime.getTime()) {
       await resetAllStatus()
       await set(nextDayAt(timeOfDayUTC, currentDate))
-    } catch (error) {
-      // TODO replace with real logging
-      console.log(error)
     }
+  } catch (error) {
+    // TODO replace with real logging
+    console.log(error)
   }
+  console.log('gets here')
 }
 
 function nextDayAt (timeOfDay, currentDate) {
