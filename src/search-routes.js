@@ -3,6 +3,7 @@ const bars = require('./externalApis/bars')()
 const wrap = require('express-async-wrap')
 const { BadRequest } = require('./custom-errors')
 const _ = require('lodash')
+const dailyResetStatus = require('./daily-reset-status')
 
 const going = (implementer, params) =>
   wrap(async ({body: { bar_id }, decoded: { id }}, res, next) => {
@@ -50,8 +51,9 @@ wrap(async (req, res, next) => {
 })
 
 const searchImplementer = async (
-  { searchBars, location, userId, getStatus }
+  { searchBars, location, userId, getStatus, dailyResetStatus }
 ) => {
+  dailyResetStatus && await dailyResetStatus()
   let businessData = await searchBars(location)
   const businesses = businessData.businesses
   const status = await Promise.all(
@@ -103,7 +105,8 @@ module.exports = (status, userDb) => {
       searchImplementer,
       {
         searchBars: bars.search,
-        getStatus: status.get
+        getStatus: status.get,
+        dailyResetStatus
       },
       tokenToUserName
     ))
