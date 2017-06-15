@@ -46,7 +46,7 @@ const createResetClockTable = () => {
     CREATE TABLE public."reset-time"
     (
       "name-id" character varying(100) NOT NULL,
-      "next-reset-time" timestamp with time zone,
+      "next-reset-time" timestamp without time zone,
       CONSTRAINT "id-key" PRIMARY KEY ("name-id")
     )
     WITH (

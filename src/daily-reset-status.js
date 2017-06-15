@@ -9,10 +9,11 @@ const pool = new pg.Pool(config)
 const Status = require('./persistence/status-factory')
 const ResetTime = require('./persistence/reset-time')
 
-async function dailyResetStatus (db = pool, timeOfDayUTC = 12) {
+async function dailyResetStatus (db = pool, timeOfDayUTC = 5) {
   const status = Status(db)
   const resetTime = ResetTime(db)
   const currentDate = new Date()
+  console.log(currentDate)
   await dailyResetStatusOrchestrater(
     currentDate,
     resetTime,
@@ -38,7 +39,6 @@ async function dailyResetStatusOrchestrater (
     // TODO replace with real logging
     console.log(error)
   }
-  console.log('gets here')
 }
 
 function nextDayAt (timeOfDay, currentDate) {
