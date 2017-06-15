@@ -3,6 +3,7 @@ const { verify } = require('./util/jwtPromise')
 const { sign } = require('jsonwebtoken')
 const secret = process.env.APP_SECRET
 const { BadRequest } = require('./custom-errors')
+const bcrypt = require('bcrypt')
 
 const authenticate = (getUser, secret, sign) => wrap(async (req, res, next) => {
   if (!req.body.user || !req.body.password) {
@@ -10,7 +11,12 @@ const authenticate = (getUser, secret, sign) => wrap(async (req, res, next) => {
   }
   const user = await getUser(req.body.user)
   if (!user) throw new BadRequest('User does not exist')
-  if (user.password !== req.body.password) throw new Error('Wrong password')
+  console.log('req.body.password', req.body.password)
+  console.log('user.password', user.password)
+  console.log('compare', await bcrypt.compare(req.body.password, user.password))
+  if (!await bcrypt.compare(req.body.password, user.password)) {
+    throw new Error('Wrong password')
+  }
   const token = sign({id: user.id}, secret, {
     expiresIn: 86400
   })

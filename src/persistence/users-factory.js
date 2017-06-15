@@ -1,13 +1,15 @@
+const bcrypt = require('bcrypt')
 
 module.exports = function usersFactory (db) {
   return { create, is, get, remove, isId, updatePassword }
 
   async function create (user) {
+    const encryptedPassword = await bcrypt.hash(user.password, 9)
     await db.query(`
       insert into users
       (name, password)
       values ($1, $2)
-    `, [user.name, user.password])
+    `, [user.name, encryptedPassword])
     return true
   }
 
